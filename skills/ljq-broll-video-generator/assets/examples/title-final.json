@@ -1,0 +1,157 @@
+{
+  "schemaVersion": "1.0",
+  "id": "title-final",
+  "renderMode": "final",
+  "canvas": {
+    "width": 1280,
+    "height": 720,
+    "fps": 30,
+    "durationInFrames": 90
+  },
+  "theme": {
+    "background": "#111318",
+    "foreground": "#f4f5f7",
+    "surface": "#373d49",
+    "muted": "#a5acb8",
+    "accent": "#ff5a4f"
+  },
+  "focus": ["main-title"],
+  "elements": [
+    {
+      "id": "backdrop",
+      "type": "shape",
+      "label": "背景",
+      "box": [8, 10, 84, 80],
+      "zIndex": 0,
+      "shape": "rounded",
+      "tone": "surface",
+      "tracks": [
+        {
+          "property": "scale",
+          "easing": "out-cubic",
+          "evidence": "default",
+          "keyframes": [
+            {"frame": 0, "value": 1.04},
+            {"frame": 89, "value": 1}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "eyebrow",
+      "type": "text",
+      "label": "小标题",
+      "content": "B-ROLL SYSTEM",
+      "box": [17, 25, 66, 8],
+      "zIndex": 10,
+      "fontSize": 25,
+      "fontWeight": 500,
+      "align": "center",
+      "color": "#ff5a4f",
+      "tracks": [
+        {
+          "property": "opacity",
+          "easing": "out-cubic",
+          "evidence": "default",
+          "keyframes": [
+            {"frame": 3, "value": 0},
+            {"frame": 14, "value": 1}
+          ]
+        },
+        {
+          "property": "y",
+          "easing": "out-cubic",
+          "evidence": "default",
+          "keyframes": [
+            {"frame": 3, "value": 3},
+            {"frame": 17, "value": 0}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "main-title",
+      "type": "text",
+      "label": "主标题",
+      "content": "让结构和运动\n都可以重复使用",
+      "box": [17, 34, 66, 25],
+      "zIndex": 20,
+      "fontSize": 68,
+      "fontWeight": 700,
+      "align": "center",
+      "tracks": [
+        {
+          "property": "opacity",
+          "easing": "out-cubic",
+          "evidence": "default",
+          "keyframes": [
+            {"frame": 8, "value": 0},
+            {"frame": 22, "value": 1}
+          ]
+        },
+        {
+          "property": "scale",
+          "easing": "out-back",
+          "evidence": "default",
+          "keyframes": [
+            {"frame": 8, "value": 0.76},
+            {"frame": 28, "value": 1}
+          ]
+        },
+        {
+          "property": "blur",
+          "easing": "out-cubic",
+          "evidence": "default",
+          "keyframes": [
+            {"frame": 8, "value": 13},
+            {"frame": 25, "value": 0}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "subtitle",
+      "type": "text",
+      "label": "说明文字",
+      "content": "JSON 是源文件 · Remotion 负责渲染",
+      "box": [19, 65, 62, 8],
+      "zIndex": 20,
+      "fontSize": 28,
+      "fontWeight": 400,
+      "align": "center",
+      "color": "#a5acb8",
+      "tracks": [
+        {
+          "property": "opacity",
+          "easing": "out-cubic",
+          "evidence": "default",
+          "keyframes": [
+            {"frame": 20, "value": 0},
+            {"frame": 36, "value": 1}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "underline",
+      "type": "line",
+      "label": "强调线",
+      "from": [39, 61],
+      "to": [61, 61],
+      "zIndex": 30,
+      "color": "#ff5a4f",
+      "lineWidth": 5,
+      "tracks": [
+        {
+          "property": "reveal",
+          "easing": "in-out-cubic",
+          "evidence": "default",
+          "keyframes": [
+            {"frame": 25, "value": 0},
+            {"frame": 42, "value": 1}
+          ]
+        }
+      ]
+    }
+  ]
+}

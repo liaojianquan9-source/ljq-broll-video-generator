@@ -1,0 +1,227 @@
+{
+  "schemaVersion": "1.0",
+  "id": "evidence-board-reference",
+  "renderMode": "reference",
+  "canvas": {
+    "width": 1280,
+    "height": 720,
+    "fps": 30,
+    "durationInFrames": 120
+  },
+  "theme": {
+    "background": "#202020",
+    "foreground": "#eeeeee",
+    "surface": "#555555",
+    "muted": "#969696",
+    "accent": "#e84a4a"
+  },
+  "focus": ["primary-card", "relationship-label"],
+  "elements": [
+    {
+      "id": "board",
+      "type": "shape",
+      "label": "背景板",
+      "box": [3, 5, 94, 90],
+      "zIndex": 0,
+      "shape": "rounded",
+      "tone": "surface"
+    },
+    {
+      "id": "primary-card",
+      "type": "shape",
+      "label": "主要人物卡片",
+      "box": [56, 13, 34, 35],
+      "zIndex": 20,
+      "shape": "rounded",
+      "tone": "foreground",
+      "tracks": [
+        {
+          "property": "opacity",
+          "easing": "out-cubic",
+          "evidence": "default",
+          "keyframes": [
+            {"frame": 5, "value": 0},
+            {"frame": 17, "value": 1}
+          ]
+        },
+        {
+          "property": "scale",
+          "easing": "out-back",
+          "evidence": "default",
+          "keyframes": [
+            {"frame": 5, "value": 0.35},
+            {"frame": 23, "value": 1}
+          ]
+        },
+        {
+          "property": "rotation",
+          "easing": "out-cubic",
+          "evidence": "default",
+          "keyframes": [
+            {"frame": 5, "value": 48},
+            {"frame": 23, "value": 3}
+          ]
+        }
+      ],
+      "oscillations": [
+        {
+          "property": "rotation",
+          "start": 24,
+          "end": 119,
+          "amplitude": 1.4,
+          "period": 84,
+          "phase": 0.1,
+          "evidence": "default"
+        }
+      ]
+    },
+    {
+      "id": "secondary-card-a",
+      "type": "shape",
+      "label": "人物卡片 A",
+      "box": [9, 15, 29, 29],
+      "zIndex": 20,
+      "shape": "rounded",
+      "tone": "muted",
+      "tracks": [
+        {
+          "property": "opacity",
+          "easing": "out-cubic",
+          "evidence": "default",
+          "keyframes": [
+            {"frame": 28, "value": 0},
+            {"frame": 42, "value": 1}
+          ]
+        },
+        {
+          "property": "x",
+          "easing": "out-cubic",
+          "evidence": "default",
+          "keyframes": [
+            {"frame": 28, "value": -8},
+            {"frame": 48, "value": 0}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "secondary-card-b",
+      "type": "shape",
+      "label": "人物卡片 B",
+      "box": [17, 60, 27, 25],
+      "zIndex": 20,
+      "shape": "rounded",
+      "tone": "muted",
+      "tracks": [
+        {
+          "property": "opacity",
+          "easing": "out-cubic",
+          "evidence": "default",
+          "keyframes": [
+            {"frame": 46, "value": 0},
+            {"frame": 60, "value": 1}
+          ]
+        },
+        {
+          "property": "y",
+          "easing": "out-cubic",
+          "evidence": "default",
+          "keyframes": [
+            {"frame": 46, "value": 8},
+            {"frame": 66, "value": 0}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "relationship-label",
+      "type": "text",
+      "label": "关系结论文字",
+      "box": [51, 59, 39, 16],
+      "zIndex": 30,
+      "tone": "foreground",
+      "tracks": [
+        {
+          "property": "opacity",
+          "easing": "out-cubic",
+          "evidence": "default",
+          "keyframes": [
+            {"frame": 70, "value": 0},
+            {"frame": 84, "value": 1}
+          ]
+        },
+        {
+          "property": "blur",
+          "easing": "out-cubic",
+          "evidence": "default",
+          "keyframes": [
+            {"frame": 70, "value": 12},
+            {"frame": 88, "value": 0}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "connector-a",
+      "type": "line",
+      "label": "关系线 A",
+      "from": [61, 38],
+      "to": [35, 35],
+      "zIndex": 10,
+      "tone": "accent",
+      "lineWidth": 4,
+      "tracks": [
+        {
+          "property": "reveal",
+          "easing": "in-out-cubic",
+          "evidence": "default",
+          "keyframes": [
+            {"frame": 56, "value": 0},
+            {"frame": 78, "value": 1}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "connector-b",
+      "type": "line",
+      "label": "关系线 B",
+      "from": [62, 42],
+      "to": [42, 67],
+      "zIndex": 10,
+      "tone": "accent",
+      "lineWidth": 4,
+      "tracks": [
+        {
+          "property": "reveal",
+          "easing": "in-out-cubic",
+          "evidence": "default",
+          "keyframes": [
+            {"frame": 62, "value": 0},
+            {"frame": 86, "value": 1}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "focus-dot",
+      "type": "shape",
+      "label": "重点",
+      "box": [82, 36, 3, 5.3],
+      "zIndex": 40,
+      "shape": "circle",
+      "tone": "accent",
+      "tracks": [
+        {
+          "property": "scale",
+          "easing": "out-back",
+          "evidence": "default",
+          "keyframes": [
+            {"frame": 18, "value": 0},
+            {"frame": 28, "value": 1}
+          ]
+        }
+      ]
+    }
+  ]
+}

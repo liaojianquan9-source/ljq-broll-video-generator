@@ -1,0 +1,4 @@
+interface:
+  display_name: "LJQ B-roll Video Generator"
+  short_description: "把参考画面转成可编辑 Remotion B-roll 视频"
+  default_prompt: "使用 $ljq-broll-video-generator 分析我的参考素材，生成可编辑场景 JSON、视频和质检关键帧。"
