@@ -13,7 +13,7 @@
 ## 0. 文档状态
 
 - 日期：2026-09-03
-- 状态：方向已确认，已开始分批实施
+- 状态：Tasks 1–9 的执行框架已完成并通过合成端到端测试；Task 10 等待用户真实参考片验收
 - 项目根目录：`/Users/liaojianquan/Documents/07_开发项目/AI剪辑_B-Roll`
 - 当前优先级：先完成复刻闭环，不建设正式知识库，不开发口播自动选点
 - 实施边界：先完成复刻主链路；真实案例验收等待用户随后提供参考片
@@ -126,7 +126,7 @@
 - 不自动删除图片底部固定比例的区域。
 - 不根据少量迹象断言参考视频一定来自 AI、AE、剪映或其他软件。
 - 不将单一侦探线索板案例当作通用视觉语法。
-- 外部压缩包没有明确许可证时，不直接公开再分发原脚本和组件；优先吸收思想并按本项目接口重新实现。
+- 群内贡献者已经明确允许本协作项目复用并公开相关脚本；保留来源说明，并把脚本接入本项目统一合同。若以后引入新的外部包，仍需先确认授权。
 
 ## 5. 目标架构
 
@@ -164,16 +164,16 @@ workspace/cases/<case-id>/
 ├── evidence/
 │   ├── source.json
 │   ├── contact-sheet.png
-│   └── keyframes/
+│   └── keyframe-*.png
 ├── assets/
 │   ├── originals/
 │   └── extracted/
 ├── specs/
 │   ├── layout.json
-│   ├── motion.json
-│   └── transition.json
+│   └── motion.json
 ├── remotion/
 │   ├── composition.tsx
+│   ├── runtime.tsx
 │   └── schema.ts
 └── validation/
     ├── report.json
@@ -330,7 +330,7 @@ validated_cases:
 
 ## 10. 分阶段执行列表
 
-以下任务只记录顺序；除非用户随后明确要求执行，否则保持待办状态。
+实施记录（2026-09-03）：Tasks 1–9 已完成；合同、四个 Skill、自包含环境、Remotion 渲染、逐帧 QA 和两轮状态机均已通过自动测试。Task 10 等待新的真实视频切口；Task 11 按产品决策继续暂缓。
 
 ### Task 1: 标记旧方案的适用状态
 
@@ -393,7 +393,7 @@ validated_cases:
 - Create or Sync: `skills/ljq-broll-layout-structure/`
 - Create: `skills/ljq-broll-layout-structure/references/asset-recovery.md`
 - Create: `skills/ljq-broll-layout-structure/references/static-compositing.md`
-- Create: `tests/cases/settled-layout-basic/`
+- Verify: `tests/e2e/run-e2e-smoke.sh`
 
 **Steps:**
 
@@ -403,15 +403,14 @@ validated_cases:
 4. 增加字体近似匹配的验收方式。
 5. 增加静态混合模式、透明度、模糊、阴影和辉光的候选记录。
 6. 删除任何新建黑白灰结构图的路径。
-7. 用一个真实落定帧完成 Remotion still 对照测试。
+7. 先用合成落定帧完成 Remotion 对照测试；真实落定帧归入 Task 10。
 
 ### Task 5: 创建参考片预检脚本
 
 **Files:**
 
 - Create: `skills/ljq-broll-replica/scripts/inspect-clip.py`
-- Create: `tests/scripts/test-inspect-clip.py`
-- Create: `tests/fixtures/short-reference.mp4`
+- Verify: `tests/e2e/run-e2e-smoke.sh`
 
 **Steps:**
 
@@ -428,9 +427,8 @@ validated_cases:
 - Create: `skills/ljq-broll-motion-forensics/SKILL.md`
 - Create: `skills/ljq-broll-motion-forensics/agents/openai.yaml`
 - Create: `skills/ljq-broll-motion-forensics/references/measurement-guide.md`
-- Create: `skills/ljq-broll-motion-forensics/scripts/track-elements.py`
-- Create: `skills/ljq-broll-motion-forensics/scripts/trace-reveal.py`
-- Create: `tests/motion-forensics/`
+- Include with contributor permission: `motion_track.py`、`element_timeline.py`、`edge_trace.py`
+- Create: `tests/motion/run-motion-tests.sh`
 
 **Steps:**
 
@@ -441,13 +439,13 @@ validated_cases:
 5. 不纳入“判断视频来自哪种软件”的功能。
 6. 验证同一输入重复运行得到一致结果。
 
-### Task 7: 调整 Remotion 实现层
+### Task 7: 建立自包含 Remotion 实现层
 
 **Files:**
 
-- Modify: `skills/ljq-broll-video-generator/assets/remotion-renderer/src/`
-- Modify: `skills/ljq-broll-video-generator/assets/remotion-renderer/package.json`
-- Create: `tests/remotion/`
+- Create: `skills/ljq-broll-replica/assets/remotion-renderer/`
+- Create: `skills/ljq-broll-replica/scripts/render-case.sh`
+- Verify: `tests/e2e/run-e2e-smoke.sh`
 
 **Steps:**
 
@@ -464,9 +462,9 @@ validated_cases:
 
 - Create: `skills/ljq-broll-fidelity-qa/SKILL.md`
 - Create: `skills/ljq-broll-fidelity-qa/agents/openai.yaml`
-- Create: `skills/ljq-broll-fidelity-qa/scripts/compare-frame.py`
-- Create: `skills/ljq-broll-fidelity-qa/scripts/compare-video.py`
-- Create: `tests/fidelity-qa/`
+- Include and adapt with contributor permission: `skills/ljq-broll-fidelity-qa/scripts/compare_video_frames.py`
+- Create: `skills/ljq-broll-fidelity-qa/scripts/qa-case.py`
+- Create: `tests/qa/run-qa-tests.sh`
 
 **Steps:**
 
@@ -484,7 +482,7 @@ validated_cases:
 - Modify: `skills/ljq-broll-replica/SKILL.md`
 - Modify: `skills/ljq-broll-replica/references/routing.md`
 - Create: `skills/ljq-broll-replica/references/quality-loop.md`
-- Create: `tests/workflows/replica-loop/`
+- Create: `tests/workflows/run-loop-tests.sh`
 
 **Steps:**
 

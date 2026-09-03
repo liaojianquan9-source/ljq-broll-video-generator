@@ -1,39 +1,38 @@
 {
-  "schemaVersion": "1.0",
+  "schemaVersion": "1.1",
   "caseId": "minimal-card",
-  "status": "ready_for_qa",
+  "status": "in_progress",
   "source": {
-    "path": "/tmp/reference.mp4",
-    "bytes": 1024,
+    "path": "/original/input/reference.mp4",
+    "bytes": 24,
     "modifiedTime": "2026-09-03T12:00:00+08:00",
-    "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "sha256": "263cb2c8e81b89350d00b4b9468727a05bca88975aed66e3727b590438a6c685",
     "width": 1920,
     "height": 1080,
     "fps": 30,
     "durationSeconds": 2,
     "declaredFrames": 60,
     "decodedFrames": 60,
-    "shotRange": [0, 59]
+    "shotRange": [0, 59],
+    "hasAudio": false
   },
   "stages": {
     "preflight": "passed",
     "layout": "passed",
     "motion": "passed",
-    "implementation": "passed",
-    "qa": "in_progress"
+    "implementation": "pending",
+    "qa": "pending"
   },
   "files": {
+    "source": "assets/originals/reference.mp4",
+    "sourceEvidence": "evidence/source.json",
     "layout": "specs/layout.json",
     "motion": "specs/motion.json",
-    "transition": null,
     "validation": "validation/report.json",
     "composition": "remotion/composition.tsx",
-    "propsSchema": "remotion/schema.ts"
+    "propsSchema": "remotion/schema.ts",
+    "render": null
   },
-  "iteration": {
-    "maxCorrections": 2,
-    "correctionsUsed": 0,
-    "lastRootCause": null
-  },
+  "iteration": {"maxCorrections": 2, "correctionsUsed": 0, "lastRootCause": null},
   "knownDifferences": []
 }

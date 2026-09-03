@@ -1,0 +1,6 @@
+interface:
+  display_name: "LJQ B-roll Motion Forensics"
+  short_description: "测量元素入场、出场、揭示与镜头运动"
+  default_prompt: "使用 $ljq-broll-motion-forensics 读取已完成的 layout.json，运行必要的动效测量，并输出绑定稳定元素 ID 的 motion.json。"
+policy:
+  allow_implicit_invocation: true

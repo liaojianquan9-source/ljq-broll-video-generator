@@ -1,9 +1,12 @@
 {
-  "schemaVersion": "1.0",
+  "schemaVersion": "1.1",
   "caseId": "minimal-card",
   "status": "pending",
   "correctionPass": 0,
+  "source": {"width": 1920, "height": 1080, "fps": 30, "durationInFrames": 60, "hasAudio": false},
+  "render": {"width": 1920, "height": 1080, "fps": 30, "durationInFrames": 60, "hasAudio": false},
   "checks": [],
+  "metrics": {},
   "issues": [],
   "knownDifferences": [],
   "artifacts": {}

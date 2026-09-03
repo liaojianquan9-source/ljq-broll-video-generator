@@ -12,16 +12,16 @@ workspace/cases/<case-id>/
 ├── evidence/
 │   ├── source.json
 │   ├── contact-sheet.png
-│   └── keyframes/
+│   └── keyframe-*.png
 ├── assets/
 │   ├── originals/
 │   └── extracted/
 ├── specs/
 │   ├── layout.json
-│   ├── motion.json
-│   └── transition.json
+│   └── motion.json
 ├── remotion/
 │   ├── composition.tsx
+│   ├── runtime.tsx
 │   └── schema.ts
 └── validation/
     ├── report.json
@@ -38,7 +38,7 @@ workspace/cases/<case-id>/
 - `remotion/schema.ts` 定义下次能够替换的内容和素材。
 - `validation/` 保存 QA 证据，不参与最终画面。
 
-项目级完整合同见 `docs/contracts/broll-case-contract.md`，机器可读 Schema 见项目根目录 `schemas/`。
+机器可读 Schema、校验器、环境安装和通用 Remotion runtime 都随主 Skill 自包含分发。GitHub 项目中的 `docs/contracts/broll-case-contract.md` 是人类可读合同。
 
 ## 状态更新规则
 

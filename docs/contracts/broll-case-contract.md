@@ -1,71 +1,79 @@
-# B-roll 复刻案例交接合同
+# B-roll 复刻案例交接合同 1.1
 
-## 目的
+主 Skill 与三个子 Skill 通过同一个案例目录交接。换 Skill、上下文压缩或新任务恢复时，先读取 `case.json`，不能依赖“右边那张图”或聊天记忆。
 
-主 Skill 与子 Skill 通过同一个案例目录交接，不依赖聊天记忆或“右边那张图”一类模糊描述。任何阶段恢复、换任务或重新加载 Skill 时，都先读取 `case.json` 及自己负责的规格文件。
+## 目录与所有权
 
-## 文件职责
-
-| 文件 | 责任 | 是否允许下游静默修改 |
+| 文件 | 责任 | 规则 |
 | --- | --- | --- |
-| `case.json` | 来源、阶段、文件索引和修正次数 | 否；只更新自己拥有的状态字段 |
-| `evidence/source.json` | 原片身份、元信息和关键帧来源 | 否 |
-| `specs/layout.json` | 落定帧、稳定元素 ID、位置、锚点、裁切、层级和静态外观 | 动效与 QA 不得改 |
-| `specs/motion.json` | 绑定到稳定元素 ID 的时间行为 | 实现与 QA 不得改 |
-| `validation/report.json` | 检查结果、问题归因和已知差异 | 只有 QA 更新 |
-| `remotion/composition.tsx` | 可编辑的最终视觉实现 | 由实现阶段维护 |
-| `remotion/schema.ts` | 可替换内容与素材接口 | 由实现阶段维护 |
+| `case.json` | 主 Skill 与当前责任阶段 | 来源、阶段、文件索引、两轮计数 |
+| `evidence/source.json` | preflight | 下游不得静默修改 |
+| `specs/layout.json` | layout | 冻结落定帧、稳定 ID、几何、裁切、素材与静态外观 |
+| `specs/motion.json` | motion | 只绑定 layout ID 或保留目标 |
+| `remotion/composition.tsx` | layout/implementation | 可编辑组合入口 |
+| `remotion/schema.ts` | layout/implementation | 下次可替换内容、素材和主题接口 |
+| `validation/report.json` | QA | 硬门、视觉判断、指标、问题归因和证据 |
 
-JSON 是跨阶段交接合同，TSX 是最终视觉实现。JSON 不承担描述任意 React 组件树的任务，也不能用一张压平截图替代可编辑组件。
+JSON 是跨阶段合同；TSX 是可编辑视觉实现。不能用压平截图代替已能拆成文字、媒体、形状和容器的构图。
+
+## 阶段化文件
+
+尚未开始的下游文件在 `case.json.files` 中必须为 `null`。阶段通过后才要求对应文件存在：
+
+- `preflight=passed`：source 与 sourceEvidence
+- `layout=passed`：layout、composition、propsSchema
+- `motion=passed`：motion
+- `implementation=passed`：composition、propsSchema、完整 render
+- `qa=passed`：render 与 status=passed 的 validation
+
+这让案例能够在任何阶段合法落盘，同时 `--complete` 仍会要求全部五个阶段和根状态都通过。
+
+## 来源可移植性
+
+`source.path` 保留用户输入的原始绝对路径作为来源记录；`files.source` 必须指向案例目录内的副本。校验器检查副本的字节数和 SHA-256，避免换窗口后原路径失效或素材悄悄变化。
 
 ## 稳定元素 ID
 
-- 元素 ID 由布局阶段创建，格式为小写连字符，例如 `hero-card-01`。
-- 动效用 `targetId` 引用布局元素，不能按自己的理解重命名。
-- `@camera`、`@scene` 和 `@transition` 是保留目标，用于整体镜头、整场和镜头连接。
-- 如果下游发现元素拆分错误，写入 QA 问题并把责任阶段设为 `layout`，不得创建第二套元素。
+- 布局阶段创建小写连字符 ID，例如 `hero-card-01`。
+- motion、runtime 与 QA 只引用这些 ID，不能自行重命名。
+- `@camera`、`@scene`、`@transition` 是整体运动的保留目标。
+- 下游发现拆分错误时，issue owner 设为 layout 并退回，不创建第二套元素。
 
-## 证据和置信度
+## 布局合同
 
-所有重要判断必须声明来源：
+`bounds` 为画布百分比 `[left, top, width, height]`，允许元素越界；`anchor` 为元素内部 0..1。每个元素记录类型、内容/素材、父组、zIndex、裁切模式、素材来源/完整性、外观、证据和置信度。
 
-- `measured`：由脚本、像素或时间码测得。
-- `observed`：从关键帧直接观察，但未精确测量。
-- `inferred`：根据可见结果推断制作方式。
-- `default`：缺少证据时使用的克制默认值。
+裁切：`viewport-clip`、`container-mask`、`asset-crop`、`none`。素材完整性：`complete`、`visible-only`、`unknown`。生成式补全不得冒充 original。
 
-置信度使用 `high`、`medium` 或 `low`。压平视频无法唯一确定字体、混合模式、插件或隐藏像素时，不得使用高置信度措辞。
+## 动效合同
 
-## 裁切与素材完整性
+平移使用像素，缩放使用倍率，旋转/色相使用度，透明度和 reveal 使用 0..1，帧号为从 0 开始的整数。支持 transform、effects、reveal 与固定 seed 的 textAnimation。所有关键帧必须严格递增并在时间线内。
 
-- `viewport-clip`：素材完整，只是超出画布。
-- `container-mask`：由父容器、遮罩或 `clip-path` 裁切。
-- `asset-crop`：素材文件本身已经裁切。
-- `none`：没有裁切。
-- `complete`：素材完整，可直接复用。
-- `visible-only`：只恢复了原片中可见的区域。
-- `unknown`：无法判断隐藏区域是否存在。
+## 证据与置信度
 
-不得为了让越界元素完整显示而改变参考构图，也不得将生成式扩图冒充原始完整素材。
+- `measured`：脚本、像素或时间码测得；
+- `observed`：从全分辨率关键帧直接观察；
+- `inferred`：根据结果推断的一种可复现实现；
+- `default`：缺证据时采用的克制默认值。
 
-## 阶段所有权
+置信度使用 high/medium/low。字体、混合模式、原插件和隐藏像素无法唯一确定时不得使用高置信度措辞。
 
-1. `preflight` 冻结来源身份和镜头范围。
-2. `layout` 冻结落定帧、元素 ID 和最终静态状态。
-3. `motion` 只能给已有元素或保留目标绑定时间行为。
-4. `implementation` 把规格实现为 Remotion，不重新解释来源。
-5. `qa` 只比较、记录和归因；修复由主 Skill 退回责任阶段。
+## 两轮修正
 
-## 修正循环
-
-初版不计为修正轮。`case.json.iteration.maxCorrections` 不得超过 2，`correctionsUsed` 不得超过它。每轮只处理一个最高影响根因或一组同根因问题；两轮后仍未通过时，保存已知差异或阻塞原因。
+初版为 pass 0。`maxCorrections` 固定为 2，必须通过 `begin-correction.mjs` 增加计数并保存前一轮报告。QA 只归因，主 Skill 定向退回责任阶段。第三次修正会被拒绝；此时保存已知差异或请求新证据。
 
 ## 校验
 
-运行：
+公开仓库入口：
 
 ```bash
 node scripts/validate-case.mjs /absolute/path/to/case-directory
 ```
 
-校验器检查 JSON 可读性、案例 ID 一致性、元素 ID 唯一性、父子引用、运动目标、帧顺序和两轮上限。JSON Schema 位于项目根目录 `schemas/`。
+安装后的自包含入口：
+
+```bash
+node /path/to/ljq-broll-replica/scripts/validate-case.mjs /absolute/path/to/case-directory --complete
+```
+
+校验器实际应用 JSON Schema，并检查案例内路径、源文件哈希、元素/父组、运动目标、时间线、媒体元信息、QA 状态和两轮上限。根目录 schema 与主 Skill 内 schema 由 `scripts/sync-schemas.sh` 保持一致。

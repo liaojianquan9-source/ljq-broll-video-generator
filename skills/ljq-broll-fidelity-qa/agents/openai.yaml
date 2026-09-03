@@ -1,0 +1,6 @@
+interface:
+  display_name: "LJQ B-roll Fidelity QA"
+  short_description: "逐帧比较参考片与渲染并归因差异"
+  default_prompt: "使用 $ljq-broll-fidelity-qa 对案例完整渲染做硬门与视觉验收，保存比较证据和 validation/report.json；只归因，不跨阶段修复。"
+policy:
+  allow_implicit_invocation: true

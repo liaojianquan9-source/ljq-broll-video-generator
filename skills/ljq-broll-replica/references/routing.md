@@ -9,7 +9,7 @@
 | 阶段 | 前置条件 | 负责内容 | 必须输出 | 不得修改 |
 | --- | --- | --- | --- | --- |
 | `preflight` | 原始参考视频 | 来源身份、视频元信息、连续镜头范围、Contact Sheet、关键帧 | `case.json`、`evidence/source.json` | 原视频 |
-| `layout` | 预检通过、落定帧可见 | 元素 ID、素材状态、最终边界、锚点、裁切、层级、静态外观 | `specs/layout.json`、落定 Remotion 组件 | 来源身份、镜头范围 |
+| `layout` | 预检通过、落定帧可见 | 元素 ID、素材状态、最终边界、锚点、裁切、层级、静态外观 | `specs/layout.json`、`remotion/composition.tsx`、`remotion/schema.ts` | 来源身份、镜头范围 |
 | `motion` | 布局通过、元素 ID 冻结 | 入场、停留、强调、出场、整体镜头和转场证据 | `specs/motion.json` | 已确认元素 ID 和最终布局 |
 | `implementation` | 布局与动效规格有效 | 可编辑 Remotion 组件、props/schema、完整渲染 | TSX、schema、MP4 | 测量事实 |
 | `qa` | 完整渲染存在 | 单帧、关键帧、时长、帧数、音频和视觉比较 | `validation/report.json`、比较图 | 布局、动效和实现源码 |
@@ -32,7 +32,7 @@
 | 规格正确但浏览器渲染、字体加载、遮罩或编码错误 | `implementation` |
 | 比较结果错误、帧未对齐或报告不完整 | `qa` |
 
-QA 每次只选择一个最高影响根因，或一组共享同一根因的问题。主 Skill 增加 `correctionsUsed` 后退回责任阶段，其他已通过阶段保持冻结。
+QA 每次只选择一个最高影响根因，或一组共享同一根因的问题。主 Skill 通过 `begin-correction.mjs` 增加 `correctionsUsed` 后退回责任阶段；除受该根因影响的实现与 QA 外，其他已通过阶段保持冻结。
 
 ## 两轮循环
 

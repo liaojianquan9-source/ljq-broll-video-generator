@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "1.0",
+  "schemaVersion": "1.1",
   "caseId": "minimal-card",
   "durationInFrames": 60,
   "motions": [
@@ -12,15 +12,11 @@
       "endFrame": 59,
       "transform": {
         "x": [{"frame": 8, "value": 130}, {"frame": 30, "value": 0}],
-        "rotation": [{"frame": 8, "value": 61}, {"frame": 30, "value": -4.2}],
+        "rotationDeg": [{"frame": 8, "value": 61}, {"frame": 30, "value": -4.2}],
         "opacity": [{"frame": 8, "value": 0}, {"frame": 15, "value": 1}]
       },
       "easingCandidate": "ease-out",
-      "evidence": {
-        "type": "measured",
-        "detail": "Entrance interval measured from decoded frames.",
-        "frames": [8, 15, 30]
-      },
+      "evidence": {"type": "measured", "detail": "Entrance interval measured from decoded frames.", "frames": [8, 15, 30]},
       "confidence": "high"
     }
   ]

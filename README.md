@@ -1,86 +1,99 @@
 # LJQ B-roll Replica
 
-一个面向“参考视频高保真复刻”的 Remotion Skill 项目。当前先跑通单个连续 B-roll 镜头的复刻流程，再把验收通过的结构、元素和剪辑手法沉淀为可复用案例；口播选点与知识库检索留到下一阶段。
+一个公开的“参考视频 → 可编辑 Remotion 高保真复刻”Skill 项目。它先跑通单个连续 B-roll 镜头的复刻，再把通过验收的元素、布局和剪辑手法留作未来知识库输入。
 
-> 当前状态（2026-09-03）：旧版 `ljq-broll-video-generator` 已能完成抽帧、Scene JSON、Remotion 渲染和基础质检；新版“一个主 Skill 统领多个阶段 Skill”的基础层已经建立，但子 Skill、统一渲染链路和高保真验收仍未全部接通。仓库中的两个案例仅用于研究展示和后续回归，是未经新版流程确认的历史基线，不是最终效果或验收通过结果。
+当前执行框架已接通：案例预检、落定布局、动效取证、Remotion 完整渲染、逐帧 QA 和最多两轮定向修正都能运行。合成端到端回归已通过；真实视觉质量仍需用用户的新参考片测试。仓库中的两个旧案例是研究展示，不是新版确认结果。
 
-## 工作流程
-
-新流程采用“先落定帧，后运动；先证据，后实现”的顺序，不再生成黑白灰格式图，也不使用 AI 生成参考图片。
+## 核心流程
 
 ```mermaid
 flowchart TD
-    A[输入一个连续 B-roll 参考片段] --> B[预检镜头边界、画幅、帧率和有效证据]
-    B --> C[选取入场完成后的落定帧]
-    C --> D[拆解元素、层级、裁切与混合关系]
-    D --> E[用 Remotion 复刻并校准最终排版]
-    E --> F[分析入场、出场、转场、缩放与局部特效]
-    F --> G[把运动和特效加入可编辑 Remotion 场景]
-    G --> H[对比空间、时间、观感和连续播放结果]
-    H --> I{是否达到当前验收标准}
-    I -->|是| J[交付案例状态、源码、成片和比较证据]
-    I -->|否，且未超过两轮| K[只修正最大误差来源]
-    K --> H
-    I -->|否，已到两轮| L[保留最佳版本并记录已知差异]
+    A[输入一个连续 B-roll 片段] --> B[冻结来源与关键帧证据]
+    B --> C[选择一个关键落定帧]
+    C --> D[拆元素并校准位置/裁切/层级/静态合成]
+    D --> E[形成可编辑 Remotion 静态构图]
+    E --> F[测量入场/出场/缩放/揭示/转场]
+    F --> G[完整 Remotion 渲染]
+    G --> H[逐帧硬门和视觉比较]
+    H --> I{视觉通过?}
+    I -->|是| J[保存可复用案例包]
+    I -->|否且少于两轮| K[只修最高影响根因]
+    K --> G
+    I -->|两轮仍失败| L[记录已知差异并停止]
 ```
 
-主 Skill 负责维持同一个案例状态并按阶段路由；阶段之间通过稳定元素 ID 和 JSON 文件交接，而不是依赖聊天记忆。详细设计见 [B-roll 高保真复刻主 Skill 实施计划](docs/plans/2026-09-03-broll-replica-master-skill-implementation-plan.md) 和 [案例交接合同](docs/contracts/broll-case-contract.md)。
+主 Skill 是同一个调度大脑；三个子 Skill 是按阶段加载的专业手册。阶段之间使用同一个案例目录、稳定元素 ID 和 JSON Schema 交接，不依赖聊天记忆。
 
-## 已经做到
+| Skill | 责任 |
+| --- | --- |
+| [`ljq-broll-replica`](skills/ljq-broll-replica/SKILL.md) | 初始化、路由、状态、Remotion 渲染、修正上限和交付 |
+| [`ljq-broll-layout-structure`](skills/ljq-broll-layout-structure/SKILL.md) | 选择落定帧，拆元素，校准最终排版、裁切、层级和静态合成 |
+| [`ljq-broll-motion-forensics`](skills/ljq-broll-motion-forensics/SKILL.md) | 测量入场、出场、平移/旋转、文字顺序、线条揭示和镜头运动 |
+| [`ljq-broll-fidelity-qa`](skills/ljq-broll-fidelity-qa/SKILL.md) | 比较完整视频、生成差异证据并把问题归因到责任阶段 |
 
-### 可运行的旧版最小闭环
+新版不生成黑白灰格式图，不用 AI 生成参考图片，也不会仅凭像素指标自动宣布高保真通过。落定帧来自原视频；Remotion 代码和组件层级就是可编辑结构。
 
-- 从参考视频生成元信息、关键帧、逐帧图片和 Contact Sheet。
-- 用可编辑 `scene.json` 表达文字、形状、图片、视频、图层和基础运动。
-- 使用 Remotion 输出 MP4，并生成开始帧、中间帧、结束帧和质检材料。
-- 支持位置、缩放、旋转、透明度、模糊、揭示、父级分组、逐字正文、纹理高亮和文字混合模式等能力。
-- 已有两个真实制作过程留下的历史基线案例。
+## 安装
 
-### 新版高保真复刻架构第一阶段
+需要 Node.js 20+、Python 3、FFmpeg 和 ffprobe。克隆仓库后运行：
 
-- 建立主 Skill：[`ljq-broll-replica`](skills/ljq-broll-replica/SKILL.md)。
-- 确定“主 Skill + 阶段 Skill + 共同案例状态”的组织方式。
-- 建立 `case.json`、布局、运动和验收四类 JSON Schema。
-- 建立稳定元素 ID、父子引用、运动目标和最多两轮修正的校验器。
-- 建立合法/非法案例 fixture 和合同测试。
-- 明确图片生成、黑白灰参考图和四轮无差别循环退出新主流程。
-- 明确知识库、口播选点和模板自动推荐暂缓，等待复刻流程稳定后再做。
+```bash
+./scripts/install-local-skills.sh
+```
 
-## 两个研究展示案例
+脚本会安装四个 Skill 到 Codex skills 目录，旧版本先移动到带时间戳的可恢复备份，再安装锁定依赖并运行官方 Skill 校验。
 
-| 案例 | 输入与目的 | 仓库内容 | 证据边界 |
-| --- | --- | --- | --- |
-| [KIMI K3 关键视觉](examples/kimi-k3-key-visual/README.md) | 单张截图 → 可编辑排版和试验性动效 | 参考图、Scene JSON、生成视频 | 排版来自截图；入场和漂移动效主要是推断，不是原视频逐帧测量 |
-| [Kimi K3 标题动效](examples/kimi-k3-title-motion/README.md) | 连续视频片段 → 标题、高亮、辅助文字和正文动效复刻 | Scene JSON、生成视频、原素材/生成效果上下对比 | 有视频时序证据，但字体度量、特效、位置和运动仍存在肉眼可见偏差 |
+## 使用
 
-这两个案例用于保存已经尝试过的结构与失败证据，不是确认后的结果。后续优化应在同一输入上回归对比，而不是只看单独生成画面是否“像一个设计”。
-
-## 后续优化
-
-按当前优先级继续：
-
-1. 完成“落定布局复刻”阶段 Skill：直接使用最终稳定帧，输出分层元素和可校准坐标。
-2. 接入“动效取证”阶段 Skill：区分父级运动、局部运动、入场、出场、转场、缩放和视觉特效，并记录证据等级。
-3. 让现有 Remotion 渲染器读取新版布局/运动规格，消除新旧数据结构之间的断点。
-4. 完成“保真验收”阶段 Skill 和对比脚本，把问题归因到空间、时间、观感或连续性，只循环一到两次。
-5. 用两个不同类型的真实视频重新跑完整新流程；在两个案例都通过前，不宣布流程稳定。
-6. 流程稳定后，再建设案例库与剪辑手法库，用口播语义匹配可复用元素和动效。
-
-## 主要目录
+在新任务中直接调用主 Skill，并给一个连续参考片：
 
 ```text
-docs/                         PRD、实施计划、合同与历史设计记录
-examples/                     两个历史复刻基线案例
-schemas/                      新版共同案例状态的 JSON Schema
-scripts/validate-case.mjs     新版案例合同校验器
-skills/ljq-broll-replica/     新版复刻主 Skill
-skills/ljq-broll-video-generator/
-                              仍可运行的旧版 Skill 与 Remotion 渲染器
-tests/contracts/              合法/非法案例合同测试
+使用 $ljq-broll-replica 复刻这个连续 B-roll 片段：
+/absolute/path/to/reference.mp4
+
+请先完成预检和落定布局，再做动效取证、Remotion 完整渲染和 QA；
+最多两轮定向修正，保留可替换 props、比较证据和已知差异。
 ```
 
-## 开源许可与研究素材
+如果输入是包含多个剪切点的长视频，应先指定目标时间范围或拆成多个连续镜头案例。
 
-本项目的源代码、项目原创文档和原创配置使用 [MIT License](LICENSE) 开源，允许学习、修改、分发和商用。
+## 已验证的执行链路
 
-`examples/` 中标为“原素材”或“参考截图”的第三方内容只用于研究、教学和效果对比，不代表项目对这些素材主张著作权，也不表示它们被 MIT License 重新授权。具体说明见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。使用者应替换为自己拥有或已经获得授权的素材。
+- 实际 JSON Schema 2020-12 校验，而不是只读取 schema 文件；
+- 案例内源文件存在性、大小和 SHA-256 一致性；
+- 布局元素 ID、父子循环、素材路径与动效目标引用；
+- 真实 Remotion 打包与 H.264 完整视频渲染；
+- 画幅、fps、解码帧数与音频硬门；
+- 全帧 RGB 指标和原片/渲染/差异比较图；
+- 未经视觉查看只能是 pending；
+- 第三次修正被状态机拒绝；
+- 最终案例必须通过 `validate-case.mjs --complete`。
+
+运行全部当前回归：
+
+```bash
+./tests/contracts/run-contract-tests.sh
+./tests/motion/run-motion-tests.sh
+./tests/qa/run-qa-tests.sh
+./tests/workflows/run-loop-tests.sh
+./tests/e2e/run-e2e-smoke.sh
+```
+
+具体“已能执行 / 需要 AI 判断 / 尚未建设”的边界见 [执行状态](docs/execution-status.md)，数据接口见 [案例交接合同](docs/contracts/broll-case-contract.md)，产品方向与后续知识库入口见 [主 Skill 实施计划](docs/plans/2026-09-03-broll-replica-master-skill-implementation-plan.md)。
+
+## 研究展示案例
+
+| 案例 | 现有内容 | 证据边界 |
+| --- | --- | --- |
+| [KIMI K3 关键视觉](examples/kimi-k3-key-visual/README.md) | 参考图、旧版 Scene JSON、生成视频 | 动效主要为推断，未按新版逐帧验收 |
+| [Kimi K3 标题动效](examples/kimi-k3-title-motion/README.md) | 旧版 Scene JSON、生成视频、上下对比视频 | 有时序证据，但字体、特效、位置和运动仍有明显差异 |
+
+它们用于保留已经尝试过的结构与失败证据。新版真实案例测试会另建 `workspace/cases/<case-id>/`，不会把旧结果冒充通过。
+
+## 当前不做
+
+多案例知识库、口播自动选点、手法检索和新内容自动调用明确延后。等至少两个不同类型的真实复刻案例通过后，再单独建设下一阶段。
+
+## 许可
+
+项目原创代码、文档和配置使用 [MIT License](LICENSE)。群内协作脚本经贡献者允许纳入公开项目，来源历史记录在 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。案例中的第三方原素材不随 MIT 重新授权。

@@ -1,36 +1,32 @@
 {
-  "schemaVersion": "1.0",
+  "schemaVersion": "1.1",
   "caseId": "invalid-card",
-  "status": "ready_for_qa",
+  "status": "in_progress",
   "source": {
-    "path": "/tmp/reference.mp4",
-    "bytes": 1024,
+    "path": "/original/input/reference.mp4",
+    "bytes": 32,
     "modifiedTime": "2026-09-03T12:00:00+08:00",
-    "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "sha256": "48a8ee6096df70b9453200ec7c1fe1de275a96b5441f5e4b2f3cd04bf61f60ef",
     "width": 1920,
     "height": 1080,
     "fps": 30,
-    "durationSeconds": 2
+    "durationSeconds": 2,
+    "declaredFrames": 60,
+    "decodedFrames": 60,
+    "shotRange": [0, 59],
+    "hasAudio": false
   },
-  "stages": {
-    "preflight": "passed",
-    "layout": "passed",
-    "motion": "passed",
-    "implementation": "passed",
-    "qa": "in_progress"
-  },
+  "stages": {"preflight": "passed", "layout": "passed", "motion": "passed", "implementation": "pending", "qa": "pending"},
   "files": {
+    "source": "assets/originals/reference.mp4",
+    "sourceEvidence": "evidence/source.json",
     "layout": "specs/layout.json",
     "motion": "specs/motion.json",
-    "transition": null,
-    "validation": "validation/report.json",
+    "validation": null,
     "composition": "remotion/composition.tsx",
-    "propsSchema": "remotion/schema.ts"
+    "propsSchema": "remotion/schema.ts",
+    "render": null
   },
-  "iteration": {
-    "maxCorrections": 2,
-    "correctionsUsed": 0,
-    "lastRootCause": null
-  },
+  "iteration": {"maxCorrections": 2, "correctionsUsed": 0, "lastRootCause": null},
   "knownDifferences": []
 }

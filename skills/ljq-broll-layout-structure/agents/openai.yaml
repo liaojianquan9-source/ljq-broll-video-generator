@@ -1,0 +1,6 @@
+interface:
+  display_name: "LJQ B-roll Layout Structure"
+  short_description: "将关键落定帧复刻成可编辑 Remotion 构图"
+  default_prompt: "使用 $ljq-broll-layout-structure 读取案例目录，选定关键落定帧，输出稳定元素 ID、layout.json 和可编辑 Remotion 静态构图。"
+policy:
+  allow_implicit_invocation: true

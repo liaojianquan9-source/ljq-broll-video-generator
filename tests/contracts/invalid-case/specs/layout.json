@@ -1,34 +1,20 @@
 {
-  "schemaVersion": "1.0",
+  "schemaVersion": "1.1",
   "caseId": "invalid-card",
-  "canvas": {"width": 1920, "height": 1080, "fps": 30},
-  "settledFrame": {"frame": 30, "timeSeconds": 1, "evidence": "fixture"},
+  "canvas": {"width": 1920, "height": 1080, "fps": 30, "durationInFrames": 60, "backgroundColor": "#111111"},
+  "settledFrame": {"frame": 30, "timeSeconds": 1, "evidenceType": "observed", "evidence": "fixture", "confidence": "medium"},
   "elements": [
     {
-      "id": "duplicate-card",
-      "type": "image",
-      "assetSource": "original",
-      "completeness": "complete",
-      "bounds": [10, 10, 30, 30],
-      "anchor": [0.5, 0.5],
-      "cropMode": "none",
-      "zIndex": 1,
-      "appearance": {},
-      "evidence": [{"type": "observed", "detail": "fixture"}],
-      "confidence": "high"
+      "id": "duplicate-card", "type": "text", "name": "First", "content": "one", "asset": null,
+      "assetSource": null, "completeness": null, "bounds": [10, 10, 30, 30], "anchor": [0.5, 0.5],
+      "cropMode": "none", "zIndex": 1, "parentId": null, "shape": null, "appearance": {}, "replaceable": true,
+      "evidence": [{"type": "observed", "detail": "fixture"}], "confidence": "high"
     },
     {
-      "id": "duplicate-card",
-      "type": "text",
-      "assetSource": "recreated",
-      "completeness": "complete",
-      "bounds": [20, 20, 20, 10],
-      "anchor": [0, 0],
-      "cropMode": "none",
-      "zIndex": 2,
-      "appearance": {},
-      "evidence": [{"type": "observed", "detail": "fixture"}],
-      "confidence": "medium"
+      "id": "duplicate-card", "type": "text", "name": "Second", "content": "two", "asset": null,
+      "assetSource": null, "completeness": null, "bounds": [20, 20, 20, 10], "anchor": [0, 0],
+      "cropMode": "none", "zIndex": 2, "parentId": null, "shape": null, "appearance": {}, "replaceable": true,
+      "evidence": [{"type": "observed", "detail": "fixture"}], "confidence": "medium"
     }
   ]
 }
