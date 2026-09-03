@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "1.0",
+  "caseId": "invalid-card",
+  "durationInFrames": 60,
+  "motions": [
+    {
+      "id": "missing-target-motion",
+      "targetId": "not-in-layout",
+      "phase": "entrance",
+      "firstVisible": 8,
+      "settledFrame": 30,
+      "endFrame": 59,
+      "transform": {"x": [{"frame": 8, "value": 100}, {"frame": 30, "value": 0}]},
+      "evidence": {"type": "inferred", "detail": "fixture"},
+      "confidence": "low"
+    }
+  ]
+}

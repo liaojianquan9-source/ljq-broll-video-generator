@@ -1,0 +1,9 @@
+{
+  "schemaVersion": "1.0",
+  "caseId": "invalid-card",
+  "status": "pending",
+  "correctionPass": 0,
+  "checks": [],
+  "issues": [],
+  "knownDifferences": []
+}

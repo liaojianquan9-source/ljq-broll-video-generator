@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ljq.local/schemas/motion.schema.json",
+  "title": "LJQ B-roll motion evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "caseId", "durationInFrames", "motions"],
+  "properties": {
+    "schemaVersion": {"const": "1.0"},
+    "caseId": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
+    "durationInFrames": {"type": "integer", "minimum": 1},
+    "motions": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/motion"}
+    }
+  },
+  "$defs": {
+    "confidence": {"enum": ["high", "medium", "low"]},
+    "evidenceType": {"enum": ["measured", "observed", "inferred", "default"]},
+    "keyframe": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["frame", "value"],
+      "properties": {
+        "frame": {"type": "number", "minimum": 0},
+        "value": {"type": "number"}
+      }
+    },
+    "track": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/keyframe"}
+    },
+    "transform": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "x": {"$ref": "#/$defs/track"},
+        "y": {"$ref": "#/$defs/track"},
+        "scaleX": {"$ref": "#/$defs/track"},
+        "scaleY": {"$ref": "#/$defs/track"},
+        "rotation": {"$ref": "#/$defs/track"},
+        "opacity": {"$ref": "#/$defs/track"},
+        "blurPx": {"$ref": "#/$defs/track"}
+      }
+    },
+    "reveal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "progress"],
+      "properties": {
+        "mode": {"enum": ["fade", "wipe", "clip", "mask", "characters", "custom"]},
+        "progress": {"$ref": "#/$defs/track"},
+        "direction": {"type": "string"}
+      }
+    },
+    "motion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "targetId",
+        "phase",
+        "firstVisible",
+        "settledFrame",
+        "endFrame",
+        "evidence",
+        "confidence"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z][a-z0-9-]*$"},
+        "targetId": {"type": "string", "minLength": 1},
+        "phase": {"enum": ["entrance", "hold", "emphasis", "exit", "camera", "transition"]},
+        "firstVisible": {"type": "integer", "minimum": 0},
+        "settledFrame": {"type": "integer", "minimum": 0},
+        "endFrame": {"type": "integer", "minimum": 0},
+        "transform": {"$ref": "#/$defs/transform"},
+        "reveal": {"$ref": "#/$defs/reveal"},
+        "easingCandidate": {"type": "string", "minLength": 1},
+        "evidence": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "detail"],
+          "properties": {
+            "type": {"$ref": "#/$defs/evidenceType"},
+            "detail": {"type": "string", "minLength": 1},
+            "frames": {"type": "array", "items": {"type": "integer", "minimum": 0}}
+          }
+        },
+        "confidence": {"$ref": "#/$defs/confidence"}
+      },
+      "anyOf": [
+        {"required": ["transform"]},
+        {"required": ["reveal"]}
+      ]
+    }
+  }
+}

@@ -1,0 +1,324 @@
+{
+  "schemaVersion": "1.0",
+  "id": "kimi-k3-screenshot-final-v2",
+  "renderMode": "final",
+  "canvas": {
+    "width": 1280,
+    "height": 720,
+    "fps": 30,
+    "durationInFrames": 120
+  },
+  "theme": {
+    "background": "#0c0d0f",
+    "foreground": "#eeeeee",
+    "surface": "#252931",
+    "muted": "#606a79",
+    "accent": "#74b8f3"
+  },
+  "focus": ["title-left", "title-highlight"],
+  "elements": [
+    {
+      "id": "background-graphic",
+      "type": "text",
+      "label": "大型背景文字",
+      "role": "background-texture",
+      "content": "月背",
+      "box": [13, 8, 72, 80],
+      "zIndex": 1,
+      "fontSize": 390,
+      "fontWeight": 700,
+      "align": "center",
+      "color": "#252931",
+      "tracks": [
+        {
+          "property": "opacity",
+          "easing": "out-cubic",
+          "evidence": "observed",
+          "keyframes": [
+            {"frame": 0, "value": 0},
+            {"frame": 28, "value": 0.72}
+          ]
+        },
+        {
+          "property": "scale",
+          "easing": "out-cubic",
+          "evidence": "default",
+          "keyframes": [
+            {"frame": 0, "value": 1.04},
+            {"frame": 119, "value": 1}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "moon-top-right",
+      "type": "shape",
+      "label": "右上虚化月球",
+      "role": "foreground-decoration",
+      "box": [72, 0, 28, 43],
+      "zIndex": 8,
+      "shape": "circle",
+      "fill": "#687384",
+      "tracks": [
+        {
+          "property": "opacity",
+          "easing": "out-cubic",
+          "evidence": "observed",
+          "keyframes": [
+            {"frame": 0, "value": 0},
+            {"frame": 20, "value": 0.7}
+          ]
+        },
+        {
+          "property": "blur",
+          "easing": "linear",
+          "evidence": "inferred",
+          "keyframes": [
+            {"frame": 0, "value": 8}
+          ]
+        },
+        {
+          "property": "scale",
+          "easing": "out-cubic",
+          "evidence": "default",
+          "keyframes": [
+            {"frame": 0, "value": 1.08},
+            {"frame": 119, "value": 1}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "moon-bottom-left",
+      "type": "shape",
+      "label": "左下虚化月球",
+      "role": "foreground-decoration",
+      "box": [0, 55, 30, 45],
+      "zIndex": 9,
+      "shape": "circle",
+      "fill": "#4e5868",
+      "tracks": [
+        {
+          "property": "opacity",
+          "easing": "out-cubic",
+          "evidence": "observed",
+          "keyframes": [
+            {"frame": 8, "value": 0},
+            {"frame": 28, "value": 0.66}
+          ]
+        },
+        {
+          "property": "blur",
+          "easing": "linear",
+          "evidence": "inferred",
+          "keyframes": [
+            {"frame": 0, "value": 10}
+          ]
+        },
+        {
+          "property": "x",
+          "easing": "out-cubic",
+          "evidence": "default",
+          "keyframes": [
+            {"frame": 0, "value": -2},
+            {"frame": 119, "value": 0}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "focus-frame",
+      "type": "shape",
+      "label": "标题外框",
+      "role": "focus-container",
+      "box": [24.8, 36.5, 50.5, 26.8],
+      "zIndex": 20,
+      "shape": "rectangle",
+      "fill": "transparent",
+      "borderColor": "#344455",
+      "borderWidth": 2,
+      "tracks": [
+        {
+          "property": "opacity",
+          "easing": "out-cubic",
+          "evidence": "observed",
+          "keyframes": [
+            {"frame": 7, "value": 0},
+            {"frame": 20, "value": 0.75}
+          ]
+        },
+        {
+          "property": "reveal",
+          "easing": "in-out-cubic",
+          "evidence": "default",
+          "keyframes": [
+            {"frame": 7, "value": 0},
+            {"frame": 28, "value": 1}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "title-left",
+      "type": "text",
+      "label": "主标题左段",
+      "role": "primary-title",
+      "content": "KIMI",
+      "box": [27.7, 38.7, 26.8, 22.5],
+      "zIndex": 30,
+      "fontSize": 150,
+      "fontWeight": 700,
+      "align": "center",
+      "color": "#f2f2f2",
+      "letterSpacing": 0.5,
+      "textShadow": "0 0 18px rgba(255,255,255,0.42)",
+      "gradient": "linear-gradient(180deg, #ffffff 0%, #f5f5f5 52%, #c8c8c8 100%)",
+      "tracks": [
+        {
+          "property": "opacity",
+          "easing": "out-cubic",
+          "evidence": "default",
+          "keyframes": [
+            {"frame": 14, "value": 0},
+            {"frame": 29, "value": 1}
+          ]
+        },
+        {
+          "property": "scale",
+          "easing": "out-back",
+          "evidence": "default",
+          "keyframes": [
+            {"frame": 14, "value": 0.78},
+            {"frame": 34, "value": 1}
+          ]
+        },
+        {
+          "property": "blur",
+          "easing": "out-cubic",
+          "evidence": "default",
+          "keyframes": [
+            {"frame": 14, "value": 14},
+            {"frame": 31, "value": 0}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "title-dot",
+      "type": "shape",
+      "label": "标题分隔点",
+      "role": "title-separator",
+      "box": [54.6, 47.2, 1.7, 3],
+      "zIndex": 31,
+      "shape": "rectangle",
+      "fill": "#8ad8ef",
+      "tracks": [
+        {
+          "property": "scale",
+          "easing": "out-back",
+          "evidence": "default",
+          "keyframes": [
+            {"frame": 24, "value": 0},
+            {"frame": 36, "value": 1}
+          ]
+        },
+        {
+          "property": "rotation",
+          "easing": "out-cubic",
+          "evidence": "default",
+          "keyframes": [
+            {"frame": 24, "value": 45},
+            {"frame": 36, "value": 45}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "title-highlight",
+      "type": "text",
+      "label": "主标题重点",
+      "role": "primary-title-accent",
+      "content": "K3",
+      "box": [56.8, 38.7, 16.3, 22.5],
+      "zIndex": 30,
+      "fontSize": 150,
+      "fontWeight": 700,
+      "align": "center",
+      "color": "#72a9ff",
+      "letterSpacing": 0.5,
+      "textShadow": "0 0 20px rgba(87,137,255,0.72)",
+      "gradient": "linear-gradient(180deg, #dff8ff 0%, #7ab8ff 45%, #4e6fe3 100%)",
+      "tracks": [
+        {
+          "property": "opacity",
+          "easing": "out-cubic",
+          "evidence": "default",
+          "keyframes": [
+            {"frame": 22, "value": 0},
+            {"frame": 37, "value": 1}
+          ]
+        },
+        {
+          "property": "x",
+          "easing": "out-cubic",
+          "evidence": "default",
+          "keyframes": [
+            {"frame": 22, "value": 5},
+            {"frame": 40, "value": 0}
+          ]
+        },
+        {
+          "property": "blur",
+          "easing": "out-cubic",
+          "evidence": "default",
+          "keyframes": [
+            {"frame": 22, "value": 15},
+            {"frame": 39, "value": 0}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "frame-handle-a",
+      "type": "shape",
+      "label": "外框节点",
+      "role": "frame-handle",
+      "box": [24.4, 36, 0.8, 1.4],
+      "zIndex": 40,
+      "shape": "rectangle",
+      "fill": "#8ac5ee",
+      "tracks": [
+        {
+          "property": "scale",
+          "easing": "out-back",
+          "evidence": "observed",
+          "keyframes": [
+            {"frame": 30, "value": 0},
+            {"frame": 39, "value": 1}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "frame-handle-b",
+      "type": "shape",
+      "label": "外框节点",
+      "role": "frame-handle",
+      "box": [74.8, 62.7, 0.8, 1.4],
+      "zIndex": 40,
+      "shape": "rectangle",
+      "fill": "#8ac5ee",
+      "tracks": [
+        {
+          "property": "scale",
+          "easing": "out-back",
+          "evidence": "observed",
+          "keyframes": [
+            {"frame": 34, "value": 0},
+            {"frame": 43, "value": 1}
+          ]
+        }
+      ]
+    }
+  ]
+}

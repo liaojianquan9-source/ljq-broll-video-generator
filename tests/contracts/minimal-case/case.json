@@ -1,0 +1,39 @@
+{
+  "schemaVersion": "1.0",
+  "caseId": "minimal-card",
+  "status": "ready_for_qa",
+  "source": {
+    "path": "/tmp/reference.mp4",
+    "bytes": 1024,
+    "modifiedTime": "2026-09-03T12:00:00+08:00",
+    "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSeconds": 2,
+    "declaredFrames": 60,
+    "decodedFrames": 60,
+    "shotRange": [0, 59]
+  },
+  "stages": {
+    "preflight": "passed",
+    "layout": "passed",
+    "motion": "passed",
+    "implementation": "passed",
+    "qa": "in_progress"
+  },
+  "files": {
+    "layout": "specs/layout.json",
+    "motion": "specs/motion.json",
+    "transition": null,
+    "validation": "validation/report.json",
+    "composition": "remotion/composition.tsx",
+    "propsSchema": "remotion/schema.ts"
+  },
+  "iteration": {
+    "maxCorrections": 2,
+    "correctionsUsed": 0,
+    "lastRootCause": null
+  },
+  "knownDifferences": []
+}

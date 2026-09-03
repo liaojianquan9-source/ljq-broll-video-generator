@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ljq.local/schemas/validation.schema.json",
+  "title": "LJQ B-roll fidelity validation",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "caseId", "status", "correctionPass", "checks", "issues", "knownDifferences"],
+  "properties": {
+    "schemaVersion": {"const": "1.0"},
+    "caseId": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
+    "status": {"enum": ["pending", "passed", "needs_revision", "blocked"]},
+    "correctionPass": {"type": "integer", "minimum": 0, "maximum": 2},
+    "checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "status", "evidence"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "status": {"enum": ["pass", "fail", "not_applicable"]},
+          "evidence": {"type": "string"}
+        }
+      }
+    },
+    "issues": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "type", "owner", "severity", "observation"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "type": {"enum": ["source", "geometry", "asset", "appearance", "timing", "motion", "transition", "render", "audio"]},
+          "targetId": {"type": ["string", "null"]},
+          "owner": {"enum": ["preflight", "layout", "motion", "implementation", "qa"]},
+          "severity": {"enum": ["high", "medium", "low"]},
+          "observation": {"type": "string", "minLength": 1},
+          "evidence": {"type": "string"}
+        }
+      }
+    },
+    "knownDifferences": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1}
+    },
+    "artifacts": {
+      "type": "object",
+      "additionalProperties": {"type": "string"}
+    }
+  }
+}

@@ -1,0 +1,7 @@
+interface:
+  display_name: "LJQ B-roll Replica"
+  short_description: "统领布局、动效、Remotion 与两轮保真校准"
+  brand_color: "#B4232C"
+  default_prompt: "使用 $ljq-broll-replica 把这段参考 B-roll 复刻为分层、可编辑、可替换的 Remotion 案例。"
+policy:
+  allow_implicit_invocation: true

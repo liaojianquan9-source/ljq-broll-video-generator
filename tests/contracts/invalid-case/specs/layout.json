@@ -1,0 +1,34 @@
+{
+  "schemaVersion": "1.0",
+  "caseId": "invalid-card",
+  "canvas": {"width": 1920, "height": 1080, "fps": 30},
+  "settledFrame": {"frame": 30, "timeSeconds": 1, "evidence": "fixture"},
+  "elements": [
+    {
+      "id": "duplicate-card",
+      "type": "image",
+      "assetSource": "original",
+      "completeness": "complete",
+      "bounds": [10, 10, 30, 30],
+      "anchor": [0.5, 0.5],
+      "cropMode": "none",
+      "zIndex": 1,
+      "appearance": {},
+      "evidence": [{"type": "observed", "detail": "fixture"}],
+      "confidence": "high"
+    },
+    {
+      "id": "duplicate-card",
+      "type": "text",
+      "assetSource": "recreated",
+      "completeness": "complete",
+      "bounds": [20, 20, 20, 10],
+      "anchor": [0, 0],
+      "cropMode": "none",
+      "zIndex": 2,
+      "appearance": {},
+      "evidence": [{"type": "observed", "detail": "fixture"}],
+      "confidence": "medium"
+    }
+  ]
+}

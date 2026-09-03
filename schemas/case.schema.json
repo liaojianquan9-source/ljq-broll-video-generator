@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ljq.local/schemas/case.schema.json",
+  "title": "LJQ B-roll replication case",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "caseId",
+    "status",
+    "source",
+    "stages",
+    "files",
+    "iteration"
+  ],
+  "properties": {
+    "schemaVersion": {"const": "1.0"},
+    "caseId": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
+    "status": {
+      "enum": ["draft", "in_progress", "ready_for_qa", "passed", "blocked"]
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "bytes", "modifiedTime", "sha256", "width", "height", "fps", "durationSeconds"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "bytes": {"type": "integer", "minimum": 1},
+        "modifiedTime": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[A-Fa-f0-9]{64}$"},
+        "width": {"type": "integer", "minimum": 1},
+        "height": {"type": "integer", "minimum": 1},
+        "fps": {"type": "number", "exclusiveMinimum": 0},
+        "durationSeconds": {"type": "number", "exclusiveMinimum": 0},
+        "declaredFrames": {"type": ["integer", "null"], "minimum": 1},
+        "decodedFrames": {"type": ["integer", "null"], "minimum": 1},
+        "shotRange": {
+          "type": "array",
+          "prefixItems": [
+            {"type": "integer", "minimum": 0},
+            {"type": "integer", "minimum": 0}
+          ],
+          "items": false,
+          "minItems": 2,
+          "maxItems": 2
+        }
+      }
+    },
+    "stages": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["preflight", "layout", "motion", "implementation", "qa"],
+      "properties": {
+        "preflight": {"$ref": "#/$defs/stageStatus"},
+        "layout": {"$ref": "#/$defs/stageStatus"},
+        "motion": {"$ref": "#/$defs/stageStatus"},
+        "implementation": {"$ref": "#/$defs/stageStatus"},
+        "qa": {"$ref": "#/$defs/stageStatus"}
+      }
+    },
+    "files": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["layout", "motion", "validation", "composition", "propsSchema"],
+      "properties": {
+        "layout": {"type": "string", "minLength": 1},
+        "motion": {"type": "string", "minLength": 1},
+        "transition": {"type": ["string", "null"]},
+        "validation": {"type": "string", "minLength": 1},
+        "composition": {"type": "string", "minLength": 1},
+        "propsSchema": {"type": "string", "minLength": 1}
+      }
+    },
+    "iteration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["maxCorrections", "correctionsUsed"],
+      "properties": {
+        "maxCorrections": {"type": "integer", "minimum": 0, "maximum": 2},
+        "correctionsUsed": {"type": "integer", "minimum": 0, "maximum": 2},
+        "lastRootCause": {"type": ["string", "null"]}
+      }
+    },
+    "knownDifferences": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1},
+      "default": []
+    }
+  },
+  "$defs": {
+    "stageStatus": {
+      "enum": ["pending", "in_progress", "passed", "needs_review", "blocked", "skipped"]
+    }
+  }
+}

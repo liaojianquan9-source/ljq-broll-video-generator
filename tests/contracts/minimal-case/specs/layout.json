@@ -1,0 +1,31 @@
+{
+  "schemaVersion": "1.0",
+  "caseId": "minimal-card",
+  "canvas": {"width": 1920, "height": 1080, "fps": 30},
+  "settledFrame": {
+    "frame": 30,
+    "timeSeconds": 1,
+    "evidence": "Primary card has completed its entrance and exit has not begun."
+  },
+  "elements": [
+    {
+      "id": "hero-card-01",
+      "type": "image",
+      "name": "Hero card",
+      "asset": "assets/originals/card.png",
+      "assetSource": "original",
+      "completeness": "complete",
+      "bounds": [61.2, 18.4, 42.8, 35.6],
+      "anchor": [0.52, 0.08],
+      "cropMode": "viewport-clip",
+      "zIndex": 30,
+      "parentId": null,
+      "appearance": {"opacity": 1, "borderRadiusPx": 0},
+      "replaceable": true,
+      "evidence": [
+        {"type": "measured", "detail": "Bounds measured on settled frame 30.", "frame": 30}
+      ],
+      "confidence": "high"
+    }
+  ]
+}
