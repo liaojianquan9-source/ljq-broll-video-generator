@@ -2,7 +2,7 @@
 name: ljq-broll-replica
 description: "统领参考视频预检、落定帧分层、动效取证、Remotion 实现和有限保真校准，把单个连续 B-roll 镜头复刻为可编辑、可替换、可继续积累的案例包。适用于用户要求直接临摹或高保真复刻参考片；不负责从整段口播自动选点，也不在本阶段建设知识库。"
 metadata:
-  version: "1.2.0"
+  version: "1.2.1"
 ---
 
 # B-roll 高保真复刻总控
@@ -12,13 +12,14 @@ metadata:
 ## 开始前
 
 1. 阅读 [references/routing.md](references/routing.md)，确认当前阶段、前置产物和责任边界。
-2. 阅读 [references/case-state.md](references/case-state.md)，创建或恢复案例状态。
-3. 进入 QA 或修正阶段时阅读 [references/quality-loop.md](references/quality-loop.md)。
-4. 布局、字体、素材或 QA 涉及“能否继续复用”时阅读 [references/reusability-gates.md](references/reusability-gates.md)。
-5. 把当前 Skill 目录记为 `SKILL_DIR`。首次使用或依赖变化时运行 `$SKILL_DIR/scripts/setup-environment.sh`；它检查 Node、Python、FFmpeg，并安装锁定版本的校验与 Remotion 依赖。
-6. 如果案例目录已经存在，先运行 `node $SKILL_DIR/scripts/validate-case.mjs <case-directory>`；不得绕过无效状态继续制作。
-7. 写 Remotion 代码前加载 `remotion:remotion-best-practices`、`remotion:remotion-markup` 和 `remotion:remotion-interactivity`。预览或渲染时再加载相应 Remotion Studio/Render 能力。
-8. 使用用户当前指定的参考片。重新导出或重新上传的文件按新来源处理，不沿用旧帧数和旧结论。
+2. 阅读 [references/scope-lock.md](references/scope-lock.md)，把时间范围、纳入元素和排除元素标准化并冻结。
+3. 阅读 [references/case-state.md](references/case-state.md)，创建或恢复案例状态。
+4. 进入 QA 或修正阶段时阅读 [references/quality-loop.md](references/quality-loop.md)。
+5. 布局、字体、素材或 QA 涉及“能否继续复用”时阅读 [references/reusability-gates.md](references/reusability-gates.md)。
+6. 把当前 Skill 目录记为 `SKILL_DIR`。首次使用或依赖变化时运行 `$SKILL_DIR/scripts/setup-environment.sh`；它检查 Node、Python、FFmpeg，并安装锁定版本的校验与 Remotion 依赖。
+7. 如果案例目录已经存在，先运行 `node $SKILL_DIR/scripts/validate-case.mjs <case-directory>`；不得绕过无效状态继续制作。
+8. 写 Remotion 代码前加载 `remotion:remotion-best-practices`、`remotion:remotion-markup` 和 `remotion:remotion-interactivity`。预览或渲染时再加载相应 Remotion Studio/Render 能力。
+9. 使用用户当前指定的参考片。重新导出或重新上传的文件按新来源处理，不沿用旧帧数和旧结论。
 
 ## 不变原则
 
@@ -38,7 +39,7 @@ metadata:
 
 ## 主流程
 
-1. **初始化与预检。** 运行 `$SKILL_DIR/.venv/bin/python $SKILL_DIR/scripts/inspect-clip.py <video> <case-dir> [--case-id id]`。它复制案例内原片、冻结哈希与解码元信息，并只抽取候选关键帧和 Contact Sheet。
+1. **范围锁定、初始化与预检。** 先把用户表达转换为明确的 `startSeconds`、`endSeconds` 和预计时长，并冻结纳入/排除清单；只对这个片段建立案例。范围或人物/A-roll 处理存在会改变成片的歧义时，先问一个定向问题，不开始完整抽帧或渲染。随后运行 `$SKILL_DIR/.venv/bin/python $SKILL_DIR/scripts/inspect-clip.py <video> <case-dir> [--case-id id]`，复制案例内片段、冻结哈希与解码元信息，并只抽取候选关键帧和 Contact Sheet。
 2. **布局。** 使用 `$ljq-broll-layout-structure` 为每个排版场景选择落定帧，拆解元素、素材、锚点、裁切、层级、字体候选和静态合成，输出 `specs/layout.json`。运行 `node $SKILL_DIR/scripts/initialize-case-remotion.mjs <case-dir>` 建立可编辑组件；逐场景渲染 source/render/compare still，静态门通过后再继续。
 3. **动效。** 使用 `$ljq-broll-motion-forensics`，逐元素绑定可追溯时间行为，把场景显隐、整体镜头、元素位移、文字特效和遮罩分轨，覆盖空占位并把 `specs/motion.json` 写入案例索引。
 4. **实现与渲染。** 运行 `$SKILL_DIR/scripts/render-case.sh <case-dir>`。共享渲染器读取 layout + motion，保留案例内 `composition.tsx`、runtime 与 props schema，并输出完整 MP4。
