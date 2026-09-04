@@ -17,4 +17,6 @@ fi
 
 grep -q 'duplicates "duplicate-card"' "$invalid_output"
 grep -q 'references missing element "not-in-layout"' "$invalid_output"
+grep -q 'text must stay live and cannot use an asset snapshot' "$invalid_output"
+grep -q 'restarts nonlinear easing' "$invalid_output"
 echo "Contract tests passed"

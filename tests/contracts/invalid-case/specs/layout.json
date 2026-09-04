@@ -15,6 +15,12 @@
       "assetSource": null, "completeness": null, "bounds": [20, 20, 20, 10], "anchor": [0, 0],
       "cropMode": "none", "zIndex": 2, "parentId": null, "shape": null, "appearance": {}, "replaceable": true,
       "evidence": [{"type": "observed", "detail": "fixture"}], "confidence": "medium"
+    },
+    {
+      "id": "screenshot-text", "type": "text", "name": "Snapshot text", "content": "snapshot", "asset": "assets/originals/card.png",
+      "assetSource": "extracted", "completeness": "visible-only", "bounds": [25, 25, 30, 12], "anchor": [0.5, 0.5],
+      "cropMode": "asset-crop", "zIndex": 3, "parentId": null, "shape": null, "appearance": {}, "replaceable": true,
+      "evidence": [{"type": "observed", "detail": "fixture"}], "confidence": "high"
     }
   ]
 }

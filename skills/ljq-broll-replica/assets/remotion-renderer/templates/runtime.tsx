@@ -98,9 +98,10 @@ type MotionState = {
 
 const easingFor = (name?: string) => {
   if (name?.includes('back')) return Easing.out(Easing.back(1.35));
-  if (name?.includes('in-out')) return Easing.inOut(Easing.cubic);
-  if (name?.includes('in')) return Easing.in(Easing.cubic);
-  if (name?.includes('out')) return Easing.out(Easing.cubic);
+  const base = name?.includes('quint') ? Easing.poly(5) : Easing.cubic;
+  if (name?.startsWith('in-out')) return Easing.inOut(base);
+  if (name?.startsWith('out')) return Easing.out(base);
+  if (name?.startsWith('in')) return Easing.in(base);
   return Easing.linear;
 };
 

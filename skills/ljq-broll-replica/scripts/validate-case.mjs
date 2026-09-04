@@ -17,6 +17,7 @@ const jsonFileKeys = new Map([
   ['validation', 'validation'],
 ]);
 const reservedTargets = new Set(['@camera', '@scene', '@transition']);
+const spatialTransformProperties = new Set(['x', 'y', 'scaleX', 'scaleY', 'rotationDeg']);
 
 const isObject = (value) => value !== null && typeof value === 'object' && !Array.isArray(value);
 const isNumber = (value) => typeof value === 'number' && Number.isFinite(value);
@@ -172,10 +173,16 @@ export const validateCase = async (caseArgument, {complete = false} = {}) => {
       if (elementIds.has(element.id)) errors.push(`layout.elements[${index}].id duplicates "${element.id}"`);
       elementIds.add(element.id);
       if (element.asset) {
+        const normalizedAsset = element.asset.replaceAll('\\', '/').replace(/^\.\//, '');
+        if (!normalizedAsset.startsWith('assets/')) errors.push(`layout.elements[${index}].asset must be a production asset under assets/`);
+        if (element.type === 'text') errors.push(`layout.elements[${index}] text must stay live and cannot use an asset snapshot`);
         const assetPath = safeCasePath(caseDirectory, element.asset, `layout.elements[${index}].asset`, errors);
         if (assetPath) {
           try { await access(assetPath); } catch { errors.push(`layout.elements[${index}].asset does not exist: ${element.asset}`); }
         }
+      }
+      if (element.type === 'text' && element.assetSource && element.assetSource !== 'recreated') {
+        errors.push(`layout.elements[${index}] live text assetSource must be "recreated" or null`);
       }
     }
     const byId = new Map((layout.elements ?? []).map((element) => [element.id, element]));
@@ -217,6 +224,9 @@ export const validateCase = async (caseArgument, {complete = false} = {}) => {
       for (const [property, track] of Object.entries(item.transform ?? {})) {
         checkTrack(track, `${at}.transform.${property}`, motion.durationInFrames);
         if (property === 'opacity' && track.some(({value}) => value < 0 || value > 1)) errors.push(`${at}.transform.opacity values must stay between 0 and 1`);
+        if (spatialTransformProperties.has(property) && track.length > 2 && item.easingCandidate && item.easingCandidate !== 'linear') {
+          errors.push(`${at}.transform.${property} restarts nonlinear easing across multiple measured segments; fit one continuous curve or split semantic phases`);
+        }
       }
       for (const [property, track] of Object.entries(item.effects ?? {})) checkTrack(track, `${at}.effects.${property}`, motion.durationInFrames);
       if (item.reveal) {
