@@ -1,22 +1,25 @@
 # 新版复刻流程执行状态
 
-更新日期：2026-09-03
+更新日期：2026-09-05
 
 ## 已能直接执行
 
 | 能力 | 入口 | 输出 |
 | --- | --- | --- |
 | 安装环境 | `skills/ljq-broll-replica/scripts/setup-environment.sh` | 锁定版本的 Python、Schema 校验和 Remotion 依赖 |
-| 初始化案例与预检 | `inspect-clip.py <video> <case-dir>` | 案例内原片、哈希、元信息、关键帧、Contact Sheet、`case.json` |
-| 合同校验 | `validate-case.mjs <case-dir> [--complete]` | Schema、文件、哈希、稳定 ID、时间线和阶段错误 |
+| 初始化案例与预检 | `inspect-clip.py <video> <case-dir> --start-seconds ... --end-seconds ...` | 按范围精确裁切的案例内源片、纳入/排除合同、哈希、元信息、关键帧和 Contact Sheet |
+| 合同校验 | `validate-case.mjs <case-dir> [--complete]` | Schema、范围、文件、哈希、场景 still、替换 still、稳定 ID、连续性和 QA gates |
+| 逐场景静帧 | layout Skill 的 `render-layout-scene.sh` | 原片/Remotion/比较 still 与场景状态 |
+| 替换冒烟 | layout Skill 的 `render-replacement-still.sh` | 替换 props 后的 still 与元素测试状态 |
 | 动效测量 | motion Skill 的 `motion_track.py`、`element_timeline.py`、`edge_trace.py` | 平移/旋转、出现时序、文字顺序和线条揭示证据 |
+| 连续性分析 | `analyze-motion-continuity.mjs <case-dir>` | 空间曲线的重复帧、反向、近停与速度尖峰证据 |
 | Remotion 案例初始化 | `initialize-case-remotion.mjs <case-dir>` | 可编辑 composition、runtime、props schema 与静态 motion 占位 |
 | 完整渲染 | `render-case.sh <case-dir>` | 与源画幅/fps/帧数一致的 MP4，并更新实现状态 |
-| 完整视频 QA | QA Skill 的 `qa-case.py <case-dir>` | 全帧指标、原片/渲染/差异比较图、`validation/report.json` |
+| 完整视频 QA | `record-qa-gates.mjs` + QA Skill 的 `qa-case.py` | live 元素、排除区域、全帧指标、原片/渲染/差异比较图和必需检查报告 |
 | 有限修正 | `begin-correction.mjs` | 保存轮次证据、定向退回责任阶段、严格限制最多两轮 |
 | 本机安装 | `scripts/install-local-skills.sh` | 安装主 Skill 与三个子 Skill，并备份旧版本 |
 
-这些工具已用合成视频走通过合同、实际 Remotion 渲染、逐帧 QA、最终 `--complete` 校验和第三轮拒绝测试。
+这些工具已用合成视频走通精确裁切、合同校验、静帧/替换 still、连续曲线、斜向擦开、叠影文字、完整 Remotion 渲染、逐帧 QA、最终 `--complete` 校验和第三轮拒绝测试。
 
 ## 能执行，但需要 AI 视觉判断
 
@@ -29,7 +32,7 @@
 - 观看比较证据后决定视觉通过，或把最大根因归给 layout、motion、implementation；
 - 复杂背景下的元素抠取与 visible-only 完整性判断。
 
-因此 QA 默认只写 `pending`，不会仅凭像素分数自动宣布高保真通过。
+因此 QA 默认保持待审，不会仅凭像素分数自动宣布高保真通过；人工观看证据并写入门禁后才能通过。
 
 ## 当前尚未建设
 

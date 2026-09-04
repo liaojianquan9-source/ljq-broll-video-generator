@@ -1,10 +1,8 @@
 # 共同案例状态
 
-## 为什么必须持久化
+案例目录是跨 Skill、上下文压缩和重新打开任务后的工作记忆。恢复时读取合同和证据，不依赖聊天中的“右边那张”。
 
-同一个 Codex 任务加载不同 Skill 时仍是同一个模型，但任务中断、上下文压缩、重新打开或换任务后不能依赖对话记忆。案例目录是跨阶段、跨会话的工作记忆。
-
-## 默认目录
+## 目录
 
 ```text
 workspace/cases/<case-id>/
@@ -12,49 +10,48 @@ workspace/cases/<case-id>/
 ├── evidence/
 │   ├── source.json
 │   ├── contact-sheet.png
-│   └── keyframe-*.png
-├── assets/
-│   ├── originals/
-│   └── extracted/
-├── specs/
-│   ├── layout.json
-│   └── motion.json
+│   ├── keyframe-*.png
+│   ├── layout/<scene>-{source,render,comparison}.png
+│   └── motion/continuity.json
+├── assets/{originals,extracted}/
+├── specs/{layout,motion}.json
 ├── remotion/
 │   ├── composition.tsx
 │   ├── runtime.tsx
 │   └── schema.ts
 └── validation/
+    ├── gates.json
     ├── report.json
-    ├── comparison.png
-    └── iterations/
+    └── iterations/pass-N/
 ```
+
+`case.json` schema 1.2 记录：
+
+- `scope`：原始时码、案例时长、纳入/排除项、排除区域显示方式和遮罩；
+- `files`：案例内源片、证据、规格、源码、渲染、QA gates 和报告的索引；
+- `stages`：五个阶段的可恢复状态；
+- `iteration`：修正上限和已使用次数。
 
 ## 真源边界
 
-- `evidence/` 是不可被下游静默修改的来源证据。
-- `case.json` 记录来源摘要、阶段状态、文件索引和修正次数。
-- `specs/` 是子 Skill 之间的交接合同。
-- `remotion/composition.tsx` 是实际可编辑的视觉实现。
-- `remotion/schema.ts` 定义下次能够替换的内容和素材。
-- `validation/` 保存 QA 证据，不参与最终画面。
+- `evidence/source.json` 和案例内源片是预检真源，下游不得静默修改。
+- `specs/` 是 Skill 之间的机器合同；`remotion/` 是可编辑实现。
+- `evidence/` 与 `validation/` 只作为取证和判断，不参与最终画面。
+- JSON Schema 和校验器是机器真源；仓库 `docs/contracts/broll-case-contract.md` 是人类可读说明。
 
-机器可读 Schema、校验器、环境安装和通用 Remotion runtime 都随主 Skill 自包含分发。GitHub 项目中的 `docs/contracts/broll-case-contract.md` 是人类可读合同。
+## 状态更新
 
-## 状态更新规则
+1. 阶段开始时写 `in_progress`。
+2. 脚本证据和人工检查都完成后才写 `passed`。
+3. 证据不足但可继续人工判断时使用 `needs_review`；缺少关键输入时使用 `blocked`。
+4. 修正前使用状态脚本归档本轮 QA，不静默覆盖历史。
+5. 只有主 Skill 可以把整个案例写为 `passed`。
 
-1. 每个阶段开始时把自己的状态改为 `in_progress`。
-2. 产物通过本阶段检查后改为 `passed`。
-3. 证据不足但可以人工判断时使用 `needs_review`。
-4. 缺少关键输入且不能继续时使用 `blocked`。
-5. 只有主 Skill 可以把整个案例标记为 `passed`。
-6. 修正前先复制本轮比较证据到 `validation/iterations/pass-N/`，不静默覆盖历史。
+## 恢复步骤
 
-## 最少恢复步骤
+1. 读取 `case.json`并运行 `validate-case.mjs <case-dir>`。
+2. 检查源片哈希和范围合同。
+3. 找到第一个非 `passed` 阶段。
+4. 只加载该阶段 Skill、规格和相关证据。
 
-1. 读取 `case.json`。
-2. 校验所有被索引的 JSON 和跨文件 ID。
-3. 检查源文件身份是否仍与记录一致。
-4. 找到第一个不是 `passed` 的阶段。
-5. 只加载该阶段的 Skill、规格和关键帧。
-
-如果源视频已改变，创建新案例或显式升级来源版本；不要把旧测量结果直接套到新文件。
+源视频变化或范围被用户纠正时，重新预检或建立新案例；不将旧测量静默套到新来源。

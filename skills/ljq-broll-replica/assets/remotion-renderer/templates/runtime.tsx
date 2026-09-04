@@ -13,7 +13,14 @@ import {
 import type {CaseProps} from './schema';
 
 type Keyframe = {frame: number; value: number};
-type Track = Keyframe[];
+type CurveTrack = {
+  keyframes: Keyframe[];
+  interpolation: 'linear' | 'bezier';
+  bezier?: [number, number, number, number];
+  allowReversal?: boolean;
+  allowHoldFrames?: boolean;
+};
+type Track = Keyframe[] | CurveTrack;
 type Appearance = {
   backgroundColor?: string;
   backgroundImage?: string;
@@ -29,6 +36,9 @@ type Appearance = {
   hueRotateDeg?: number;
   boxShadow?: string;
   textShadow?: string;
+  textGradient?: string;
+  textStrokePx?: number;
+  textStrokeColor?: string;
   borderRadiusPx?: number;
   borderWidthPx?: number;
   borderColor?: string;
@@ -54,6 +64,7 @@ type LayoutElement = {
   id: string;
   type: 'background' | 'group' | 'text' | 'image' | 'video' | 'shape' | 'line' | 'effect';
   name: string;
+  sceneId?: string | null;
   content: string | null;
   asset: string | null;
   bounds: [number, number, number, number];
@@ -66,6 +77,7 @@ type LayoutElement = {
 };
 type LayoutSpec = {
   canvas: {width: number; height: number; fps: number; durationInFrames: number; backgroundColor: string};
+  scenes?: Array<{id: string; startFrame: number; endFrame: number}>;
   elements: LayoutElement[];
 };
 type Motion = {
@@ -74,7 +86,20 @@ type Motion = {
   transform?: Partial<Record<'x' | 'y' | 'scaleX' | 'scaleY' | 'rotationDeg' | 'opacity' | 'blurPx', Track>>;
   effects?: Partial<Record<'brightness' | 'contrast' | 'saturation' | 'hueRotateDeg', Track>>;
   reveal?: {mode: string; progress: Track; direction?: string};
-  textAnimation?: {preset: string; startFrame: number; endFrame: number; seed: number; distancePx?: number; blurPx?: number; staggerFrames: number};
+  textAnimation?: {
+    preset: string;
+    startFrame: number;
+    endFrame: number;
+    seed: number;
+    distancePx?: number;
+    blurPx?: number;
+    staggerFrames: number;
+    direction?: 'top-to-bottom' | 'bottom-to-top' | 'left-to-right' | 'right-to-left';
+    ghostLayers?: number;
+    ghostOffsetPx?: number;
+    ghostOpacity?: number;
+    stretchY?: number;
+  };
 };
 type MotionSpec = {motions: Motion[]};
 type CaseState = {files: {source: string}; source: {hasAudio: boolean}};
@@ -96,7 +121,13 @@ type MotionState = {
   textAnimation?: Motion['textAnimation'];
 };
 
-const easingFor = (name?: string) => {
+const keyframesFor = (track: Track): Keyframe[] => Array.isArray(track) ? track : track.keyframes;
+
+const easingFor = (name?: string, track?: Track) => {
+  if (track && !Array.isArray(track)) {
+    if (track.interpolation === 'linear') return Easing.linear;
+    if (track.interpolation === 'bezier' && track.bezier) return Easing.bezier(...track.bezier);
+  }
   if (name?.includes('back')) return Easing.out(Easing.back(1.35));
   const base = name?.includes('quint') ? Easing.poly(5) : Easing.cubic;
   if (name?.startsWith('in-out')) return Easing.inOut(base);
@@ -106,16 +137,18 @@ const easingFor = (name?: string) => {
 };
 
 const valueAt = (track: Track | undefined, frame: number, fallback: number, easingName?: string) => {
-  if (!track || track.length === 0) return fallback;
-  if (track.length === 1 || frame <= track[0].frame) return track[0].value;
-  const last = track[track.length - 1];
+  if (!track) return fallback;
+  const keyframes = keyframesFor(track);
+  if (keyframes.length === 0) return fallback;
+  if (keyframes.length === 1 || frame <= keyframes[0].frame) return keyframes[0].value;
+  const last = keyframes[keyframes.length - 1];
   if (frame >= last.frame) return last.value;
-  for (let index = 0; index < track.length - 1; index += 1) {
-    const left = track[index];
-    const right = track[index + 1];
+  for (let index = 0; index < keyframes.length - 1; index += 1) {
+    const left = keyframes[index];
+    const right = keyframes[index + 1];
     if (frame <= right.frame) {
       return interpolate(frame, [left.frame, right.frame], [left.value, right.value], {
-        extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: easingFor(easingName),
+        extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: easingFor(easingName, track),
       });
     }
   }
@@ -151,14 +184,32 @@ const motionAt = (targetId: string, motions: Motion[], frame: number): MotionSta
   return state;
 };
 
+const diagonalClip = (progress: number, direction: 'diagonal-down-right' | 'diagonal-up-right') => {
+  const extent = Math.max(0, Math.min(200, progress * 200));
+  if (direction === 'diagonal-down-right') {
+    if (extent <= 100) return `polygon(0 0, ${extent}% 0, 0 ${extent}%)`;
+    const edge = extent - 100;
+    return `polygon(0 0, 100% 0, 100% ${edge}%, ${edge}% 100%, 0 100%)`;
+  }
+  if (extent <= 100) return `polygon(0 100%, ${extent}% 100%, 0 ${100 - extent}%)`;
+  const edge = extent - 100;
+  return `polygon(0 0, ${edge}% 0, 100% ${100 - edge}%, 100% 100%, 0 100%)`;
+};
+
+const clipForProgress = (progress: number, direction?: string): string | undefined => {
+  const normalized = Math.max(0, Math.min(1, progress));
+  const hidden = 100 - normalized * 100;
+  if (direction === 'right-to-left') return `inset(0 0 0 ${hidden}%)`;
+  if (direction === 'top-to-bottom') return `inset(0 0 ${hidden}% 0)`;
+  if (direction === 'bottom-to-top') return `inset(${hidden}% 0 0 0)`;
+  if (direction === 'diagonal-down-right' || direction === 'diagonal-up-right') return diagonalClip(normalized, direction);
+  if (direction === 'radial') return `circle(${normalized * 72}% at 50% 50%)`;
+  return `inset(0 ${hidden}% 0 0)`;
+};
+
 const revealClip = (state: MotionState): string | undefined => {
   if (!state.revealMode || state.revealMode === 'fade' || state.revealMode === 'characters') return undefined;
-  const hidden = 100 - Math.max(0, Math.min(1, state.reveal)) * 100;
-  if (state.revealDirection === 'right-to-left') return `inset(0 0 0 ${hidden}%)`;
-  if (state.revealDirection === 'top-to-bottom') return `inset(0 0 ${hidden}% 0)`;
-  if (state.revealDirection === 'bottom-to-top') return `inset(${hidden}% 0 0 0)`;
-  if (state.revealDirection === 'radial') return `circle(${state.reveal * 72}% at 50% 50%)`;
-  return `inset(0 ${hidden}% 0 0)`;
+  return clipForProgress(state.reveal, state.revealDirection);
 };
 
 const relativeBounds = (element: LayoutElement, parent?: LayoutElement): [number, number, number, number] => {
@@ -190,13 +241,46 @@ const mediaSource = (source: string) => /^(https?:|data:|blob:)/.test(source) ? 
 const textAnimationClip = (animation: MotionState['textAnimation'], frame: number): string | undefined => {
   if (!animation || animation.preset !== 'wipe') return undefined;
   const progress = Math.max(0, Math.min(1, (frame - animation.startFrame) / Math.max(1, animation.endFrame - animation.startFrame)));
-  return `inset(0 ${100 - progress * 100}% 0 0)`;
+  return clipForProgress(progress, animation.direction);
 };
 
 const textContent = (content: string, animation: NonNullable<MotionState['textAnimation']>, frame: number, id: string) => {
   const duration = Math.max(1, animation.endFrame - animation.startFrame);
   const progress = Math.max(0, Math.min(1, (frame - animation.startFrame) / duration));
   if (animation.preset === 'typewriter') return content.slice(0, Math.floor(content.length * progress));
+  if (animation.preset === 'ghost-drop-in') {
+    return [...content].map((character, index) => {
+      const localStart = animation.startFrame + index * animation.staggerFrames;
+      const raw = Math.max(0, Math.min(1, (frame - localStart) / Math.max(1, duration * 0.65)));
+      const local = 1 - (1 - raw) ** 3;
+      const direction = animation.direction ?? 'top-to-bottom';
+      const vector = direction === 'bottom-to-top' ? [0, 1] : direction === 'left-to-right' ? [-1, 0] : direction === 'right-to-left' ? [1, 0] : [0, -1];
+      const distance = animation.distancePx ?? 30;
+      const layers = animation.ghostLayers ?? 3;
+      const ghostOffset = animation.ghostOffsetPx ?? 4;
+      const ghostOpacity = animation.ghostOpacity ?? 0.28;
+      const stretch = 1 + ((animation.stretchY ?? 1.18) - 1) * (1 - local);
+      return <span key={`${id}-${index}`} style={{display: 'inline-block', position: 'relative', whiteSpace: 'pre'}}>
+        {Array.from({length: layers}, (_, layerIndex) => {
+          const lag = (layerIndex + 1) / (layers + 2);
+          const ghostLocal = Math.max(0, Math.min(1, raw - lag * 0.22));
+          const ghostEase = 1 - (1 - ghostLocal) ** 3;
+          const offset = distance * (1 - ghostEase) + ghostOffset * (layerIndex + 1);
+          return <span key={`ghost-${layerIndex}`} aria-hidden style={{
+            position: 'absolute', inset: 0, pointerEvents: 'none',
+            opacity: ghostOpacity * (1 - ghostEase) * (1 - layerIndex / (layers + 1)),
+            transform: `translate(${vector[0] * offset}px, ${vector[1] * offset}px) scaleY(${stretch})`,
+            filter: animation.blurPx ? `blur(${animation.blurPx * (1 - ghostEase)}px)` : undefined,
+          }}>{character === ' ' ? '\u00a0' : character}</span>;
+        })}
+        <span style={{
+          display: 'inline-block', opacity: local,
+          transform: `translate(${vector[0] * distance * (1 - local)}px, ${vector[1] * distance * (1 - local)}px) scaleY(${stretch})`,
+          filter: animation.blurPx ? `blur(${animation.blurPx * (1 - local)}px)` : undefined,
+        }}>{character === ' ' ? '\u00a0' : character}</span>
+      </span>;
+    });
+  }
   if (animation.preset !== 'scatter-in') return content;
   return [...content].map((character, index) => {
     const localStart = animation.startFrame + index * animation.staggerFrames;
@@ -272,6 +356,11 @@ const ElementNode: React.FC<{
       textAlign: appearance.textAlign,
       whiteSpace: appearance.whiteSpace as React.CSSProperties['whiteSpace'],
       textShadow: appearance.textShadow,
+      backgroundImage: appearance.textGradient,
+      backgroundClip: appearance.textGradient ? 'text' : undefined,
+      WebkitBackgroundClip: appearance.textGradient ? 'text' : undefined,
+      WebkitTextFillColor: appearance.textGradient ? 'transparent' : undefined,
+      WebkitTextStroke: appearance.textStrokePx ? `${appearance.textStrokePx}px ${appearance.textStrokeColor ?? 'currentColor'}` : undefined,
     }}>{state.textAnimation ? textContent(content, state.textAnimation, frame, element.id) : content}</div>;
   }
   if (element.type === 'image' || element.type === 'video') {
@@ -310,12 +399,14 @@ export const CaseFromSpec: React.FC<{
   const camera = motionAt('@camera', motion.motions, frame);
   const scene = motionAt('@scene', motion.motions, frame);
   const transition = motionAt('@transition', motion.motions, frame);
-  const rootElements = layout.elements.filter((item) => item.parentId === null).sort((a, b) => a.zIndex - b.zIndex);
+  const activeSceneIds = new Set((layout.scenes ?? []).filter((item) => frame >= item.startFrame && frame <= item.endFrame).map((item) => item.id));
+  const visibleElements = layout.scenes ? layout.elements.filter((item) => item.sceneId && activeSceneIds.has(item.sceneId)) : layout.elements;
+  const rootElements = visibleElements.filter((item) => item.parentId === null).sort((a, b) => a.zIndex - b.zIndex);
   return <AbsoluteFill style={{backgroundColor: overrides.theme.background ?? layout.canvas.backgroundColor, overflow: 'hidden'}}>
     <AbsoluteFill style={sceneStyle(transition)}>
       <AbsoluteFill style={sceneStyle(scene)}>
         <AbsoluteFill style={sceneStyle(camera)}>
-          {rootElements.map((element) => <ElementNode key={element.id} element={element} elements={layout.elements} motions={motion.motions} overrides={overrides} />)}
+          {rootElements.map((element) => <ElementNode key={element.id} element={element} elements={visibleElements} motions={motion.motions} overrides={overrides} />)}
         </AbsoluteFill>
       </AbsoluteFill>
     </AbsoluteFill>

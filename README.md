@@ -2,19 +2,19 @@
 
 一个公开的“参考视频 → 可编辑 Remotion 高保真复刻”Skill 项目。它先跑通单个连续 B-roll 镜头的复刻，再把通过验收的元素、布局和剪辑手法留作未来知识库输入。
 
-当前执行框架已接通：案例预检、落定布局、动效取证、Remotion 完整渲染、逐帧 QA 和最多两轮定向修正都能运行。合成端到端回归已通过；真实视觉质量仍需用用户的新参考片测试。仓库中的两个旧案例是研究展示，不是新版确认结果。
+当前执行框架已接通：精确范围预检、逐场景静帧落定、可替换元素验证、逐元素动效取证、连续曲线检测、Remotion 完整渲染、不可绕过的 QA 和最多两轮定向修正。合成端到端回归已通过；真实视觉质量仍需用用户的新参考片测试。仓库中的两个旧案例是研究展示，不是新版确认结果。
 
 ## 核心流程
 
 ```mermaid
 flowchart TD
-    A[输入一个连续 B-roll 片段] --> B[冻结来源与关键帧证据]
-    B --> C[选择一个关键落定帧]
-    C --> D[拆元素并校准位置/裁切/层级/静态合成]
-    D --> E[形成可编辑 Remotion 静态构图]
-    E --> F[测量入场/出场/缩放/揭示/转场]
+    A[输入时码与纳入/排除范围] --> B[生成精确裁切源片和范围合同]
+    B --> C[逐场景选落定帧]
+    C --> D[拆元素并校准几何/字体/静态材质]
+    D --> E[逐场景 still 与替换 still 通过]
+    E --> F[逐元素测量并拟合连续曲线]
     F --> G[完整 Remotion 渲染]
-    G --> H[逐帧硬门和视觉比较]
+    G --> H[范围/live 元素/排除区域/完整视频 QA]
     H --> I{视觉通过?}
     I -->|是| J[保存可复用案例包]
     I -->|否且少于两轮| K[只修最高影响根因]
@@ -27,9 +27,9 @@ flowchart TD
 | Skill | 责任 |
 | --- | --- |
 | [`ljq-broll-replica`](skills/ljq-broll-replica/SKILL.md) | 初始化、路由、状态、Remotion 渲染、修正上限和交付 |
-| [`ljq-broll-layout-structure`](skills/ljq-broll-layout-structure/SKILL.md) | 选择落定帧，拆元素，校准最终排版、裁切、层级和静态合成 |
-| [`ljq-broll-motion-forensics`](skills/ljq-broll-motion-forensics/SKILL.md) | 测量入场、出场、平移/旋转、文字顺序、线条揭示和镜头运动 |
-| [`ljq-broll-fidelity-qa`](skills/ljq-broll-fidelity-qa/SKILL.md) | 比较完整视频、生成差异证据并把问题归因到责任阶段 |
+| [`ljq-broll-layout-structure`](skills/ljq-broll-layout-structure/SKILL.md) | 逐场景落定，拆元素，校准静态画面，生成比较与替换 still |
+| [`ljq-broll-motion-forensics`](skills/ljq-broll-motion-forensics/SKILL.md) | 逐元素测量时间、方向、缩放、揭示、文字特效和连续曲线 |
+| [`ljq-broll-fidelity-qa`](skills/ljq-broll-fidelity-qa/SKILL.md) | 核对范围、live 元素、排除区域、完整视频并归因差异 |
 
 新版不生成黑白灰格式图，不用 AI 生成参考图片，也不会仅凭像素指标自动宣布高保真通过。落定帧来自原视频；Remotion 代码和组件层级就是可编辑结构。
 
@@ -59,11 +59,14 @@ flowchart TD
 
 ## 已验证的执行链路
 
-- 实际 JSON Schema 2020-12 校验，而不是只读取 schema 文件；
+- 实际 JSON Schema 2020-12 校验，包括 1.2 范围、场景、替换、连续性和 QA gates；
+- 按用户时码精确裁切案例内源片，解码误差不超一帧；
 - 案例内源文件存在性、大小和 SHA-256 一致性；
 - 布局元素 ID、父子循环、素材路径与动效目标引用；
 - 真实 Remotion 打包与 H.264 完整视频渲染；
-- 画幅、fps、解码帧数与音频硬门；
+- 逐场景 source/render/comparison still 和可替换元素 still 门；
+- 连续 bezier 曲线、斜向擦开和叠影文字 runtime；
+- 画幅、fps、解码帧数、音频、live 元素和排除区域门；
 - 全帧 RGB 指标和原片/渲染/差异比较图；
 - 未经视觉查看只能是 pending；
 - 第三次修正被状态机拒绝；
@@ -73,7 +76,9 @@ flowchart TD
 
 ```bash
 ./tests/contracts/run-contract-tests.sh
+./tests/preflight/run-preflight-tests.sh
 ./tests/motion/run-motion-tests.sh
+./tests/runtime/run-runtime-tests.sh
 ./tests/qa/run-qa-tests.sh
 ./tests/workflows/run-loop-tests.sh
 ./tests/e2e/run-e2e-smoke.sh

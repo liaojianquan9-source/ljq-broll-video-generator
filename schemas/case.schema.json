@@ -6,7 +6,7 @@
   "additionalProperties": false,
   "required": ["schemaVersion", "caseId", "status", "source", "stages", "files", "iteration", "knownDifferences"],
   "properties": {
-    "schemaVersion": {"const": "1.1"},
+    "schemaVersion": {"enum": ["1.1", "1.2"]},
     "caseId": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
     "status": {"enum": ["draft", "in_progress", "ready_for_qa", "passed", "blocked"]},
     "source": {
@@ -37,6 +37,21 @@
         "hasAudio": {"type": "boolean"}
       }
     },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["startSeconds", "endSeconds", "durationSeconds", "include", "exclude", "excludedRegionMode", "exclusionMask", "confirmation"],
+      "properties": {
+        "startSeconds": {"type": "number", "minimum": 0},
+        "endSeconds": {"type": "number", "exclusiveMinimum": 0},
+        "durationSeconds": {"type": "number", "exclusiveMinimum": 0},
+        "include": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+        "exclude": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+        "excludedRegionMode": {"enum": ["none", "blank", "transparent", "background"]},
+        "exclusionMask": {"type": ["string", "null"]},
+        "confirmation": {"type": "string", "minLength": 1}
+      }
+    },
     "stages": {
       "type": "object",
       "additionalProperties": false,
@@ -61,7 +76,8 @@
         "validation": {"type": ["string", "null"]},
         "composition": {"type": ["string", "null"]},
         "propsSchema": {"type": ["string", "null"]},
-        "render": {"type": ["string", "null"]}
+        "render": {"type": ["string", "null"]},
+        "qaGates": {"type": ["string", "null"]}
       }
     },
     "iteration": {
@@ -79,6 +95,16 @@
       "items": {"type": "string", "minLength": 1}
     }
   },
+  "allOf": [
+    {
+      "if": {"properties": {"schemaVersion": {"const": "1.2"}}},
+      "then": {
+        "type": "object",
+        "required": ["scope"],
+        "properties": {"files": {"type": "object", "required": ["qaGates"]}}
+      }
+    }
+  ],
   "$defs": {
     "stageStatus": {"enum": ["pending", "in_progress", "passed", "needs_review", "blocked", "skipped"]}
   }

@@ -31,10 +31,11 @@ const motionPath = path.join(caseDirectory, 'specs', 'motion.json');
 if (!(await exists(motionPath))) {
   await mkdir(path.dirname(motionPath), {recursive: true});
   const placeholder = {
-    schemaVersion: '1.1',
+    schemaVersion: caseState.schemaVersion,
     caseId: caseState.caseId,
     durationInFrames: caseState.source.decodedFrames,
     motions: [],
+    ...(caseState.schemaVersion === '1.2' ? {continuity: {status: 'needs_review', evidence: 'evidence/motion/continuity.json', windows: []}} : {}),
   };
   await writeFile(motionPath, `${JSON.stringify(placeholder, null, 2)}\n`, 'utf8');
 }

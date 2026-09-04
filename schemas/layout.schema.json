@@ -4,9 +4,9 @@
   "title": "LJQ B-roll settled layout",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schemaVersion", "caseId", "canvas", "settledFrame", "elements"],
+  "required": ["schemaVersion", "caseId", "canvas", "elements"],
   "properties": {
-    "schemaVersion": {"const": "1.1"},
+    "schemaVersion": {"enum": ["1.1", "1.2"]},
     "caseId": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
     "canvas": {
       "type": "object",
@@ -20,6 +20,28 @@
         "backgroundColor": {"type": "string", "minLength": 1}
       }
     },
+    "settledFrame": {"$ref": "#/$defs/settledFrame"},
+    "scenes": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/scene"}},
+    "replacementTests": {"type": "array", "items": {"$ref": "#/$defs/replacementTest"}},
+    "elements": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/element"}
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"schemaVersion": {"const": "1.1"}}},
+      "then": {"type": "object", "required": ["settledFrame"]}
+    },
+    {
+      "if": {"properties": {"schemaVersion": {"const": "1.2"}}},
+      "then": {"type": "object", "required": ["scenes", "replacementTests"]}
+    }
+  ],
+  "$defs": {
+    "confidence": {"enum": ["high", "medium", "low"]},
+    "evidenceType": {"enum": ["measured", "observed", "inferred", "default"]},
     "settledFrame": {
       "type": "object",
       "additionalProperties": false,
@@ -32,15 +54,47 @@
         "confidence": {"$ref": "#/$defs/confidence"}
       }
     },
-    "elements": {
-      "type": "array",
-      "minItems": 1,
-      "items": {"$ref": "#/$defs/element"}
-    }
-  },
-  "$defs": {
-    "confidence": {"enum": ["high", "medium", "low"]},
-    "evidenceType": {"enum": ["measured", "observed", "inferred", "default"]},
+    "scene": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "startFrame", "endFrame", "settledFrame", "sourceStill", "renderStill", "comparisonStill", "status", "observation"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z][a-z0-9-]*$"},
+        "startFrame": {"type": "integer", "minimum": 0},
+        "endFrame": {"type": "integer", "minimum": 0},
+        "settledFrame": {"$ref": "#/$defs/settledFrame"},
+        "sourceStill": {"type": "string", "minLength": 1},
+        "renderStill": {"type": "string", "minLength": 1},
+        "comparisonStill": {"type": "string", "minLength": 1},
+        "status": {"enum": ["passed", "needs_review"]},
+        "observation": {"type": "string", "minLength": 1}
+      }
+    },
+    "fontCandidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["family", "source", "license", "evidence", "confidence", "exact"],
+      "properties": {
+        "family": {"type": "string", "minLength": 1},
+        "source": {"type": "string", "minLength": 1},
+        "license": {"type": "string", "minLength": 1},
+        "evidence": {"type": "string", "minLength": 1},
+        "confidence": {"$ref": "#/$defs/confidence"},
+        "exact": {"type": "boolean"}
+      }
+    },
+    "replacementTest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["elementId", "variant", "renderStill", "status", "observation"],
+      "properties": {
+        "elementId": {"type": "string", "minLength": 1},
+        "variant": {"type": "string", "minLength": 1},
+        "renderStill": {"type": "string", "minLength": 1},
+        "status": {"enum": ["passed", "needs_review", "failed"]},
+        "observation": {"type": "string", "minLength": 1}
+      }
+    },
     "bounds": {
       "description": "Percent of canvas: [left, top, width, height]. Values may extend outside the canvas.",
       "type": "array",
@@ -92,6 +146,9 @@
         "hueRotateDeg": {"type": "number"},
         "boxShadow": {"type": "string"},
         "textShadow": {"type": "string"},
+        "textGradient": {"type": "string"},
+        "textStrokePx": {"type": "number", "minimum": 0},
+        "textStrokeColor": {"type": "string"},
         "borderRadiusPx": {"type": "number", "minimum": 0},
         "borderWidthPx": {"type": "number", "minimum": 0},
         "borderColor": {"type": "string"},
@@ -139,6 +196,7 @@
         "id": {"type": "string", "pattern": "^[a-z][a-z0-9-]*$"},
         "type": {"enum": ["background", "group", "text", "image", "video", "shape", "line", "effect"]},
         "name": {"type": "string", "minLength": 1},
+        "sceneId": {"type": ["string", "null"]},
         "content": {"type": ["string", "null"]},
         "asset": {"type": ["string", "null"]},
         "assetSource": {"type": ["string", "null"], "enum": ["original", "found", "extracted", "recreated", null]},
@@ -151,6 +209,7 @@
         "shape": {"type": ["string", "null"], "enum": ["rectangle", "circle", "ellipse", "line", "custom", null]},
         "appearance": {"$ref": "#/$defs/appearance"},
         "replaceable": {"type": "boolean"},
+        "fontCandidates": {"type": "array", "items": {"$ref": "#/$defs/fontCandidate"}},
         "evidence": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/evidence"}},
         "confidence": {"$ref": "#/$defs/confidence"}
       },

@@ -6,7 +6,7 @@ project_dir="$(cd "$script_dir/.." && pwd)"
 target_dir="$project_dir/skills/ljq-broll-replica/schemas"
 
 mkdir -p "$target_dir"
-for schema in case layout motion validation; do
+for schema in case layout motion validation qa-gates; do
   cp "$project_dir/schemas/$schema.schema.json" "$target_dir/$schema.schema.json"
 done
 

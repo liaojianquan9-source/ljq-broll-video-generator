@@ -6,7 +6,7 @@
   "additionalProperties": false,
   "required": ["schemaVersion", "caseId", "status", "correctionPass", "source", "render", "checks", "metrics", "issues", "knownDifferences", "artifacts"],
   "properties": {
-    "schemaVersion": {"const": "1.1"},
+    "schemaVersion": {"enum": ["1.1", "1.2"]},
     "caseId": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
     "status": {"enum": ["pending", "passed", "needs_revision", "blocked"]},
     "correctionPass": {"type": "integer", "minimum": 0, "maximum": 2},
@@ -37,7 +37,7 @@
         "required": ["id", "type", "owner", "severity", "observation", "evidence"],
         "properties": {
           "id": {"type": "string", "minLength": 1},
-          "type": {"enum": ["source", "geometry", "asset", "appearance", "timing", "motion", "transition", "render", "audio"]},
+          "type": {"enum": ["source", "scope", "geometry", "asset", "reusability", "appearance", "timing", "motion", "continuity", "transition", "render", "audio"]},
           "targetId": {"type": ["string", "null"]},
           "owner": {"enum": ["preflight", "layout", "motion", "implementation", "qa"]},
           "severity": {"enum": ["high", "medium", "low"]},

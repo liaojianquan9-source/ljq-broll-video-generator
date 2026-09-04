@@ -15,6 +15,7 @@ const jsonFileKeys = new Map([
   ['layout', 'layout'],
   ['motion', 'motion'],
   ['validation', 'validation'],
+  ['qaGates', 'qa-gates'],
 ]);
 const reservedTargets = new Set(['@camera', '@scene', '@transition']);
 const spatialTransformProperties = new Set(['x', 'y', 'scaleX', 'scaleY', 'rotationDeg']);
@@ -60,7 +61,7 @@ export const validateCase = async (caseArgument, {complete = false} = {}) => {
   const resolvedFiles = {};
 
   const schemas = {};
-  for (const name of ['case', 'layout', 'motion', 'validation']) {
+  for (const name of ['case', 'layout', 'motion', 'validation', 'qa-gates']) {
     try {
       schemas[name] = await readJson(path.join(schemaDirectory, `${name}.schema.json`));
     } catch (cause) {
@@ -134,6 +135,7 @@ export const validateCase = async (caseArgument, {complete = false} = {}) => {
   requireFile('implementation', 'render');
   requireFile('qa', 'validation');
   requireFile('qa', 'render');
+  if (caseState.schemaVersion === '1.2' && (caseState.stages?.qa === 'passed' || complete)) requireFile('qa', 'qaGates');
 
   if (complete || caseState.status === 'passed') {
     for (const stage of ['preflight', 'layout', 'motion', 'implementation', 'qa']) {
@@ -154,6 +156,24 @@ export const validateCase = async (caseArgument, {complete = false} = {}) => {
     }
   }
 
+  if (caseState.schemaVersion === '1.2' && isObject(caseState.scope)) {
+    const {startSeconds, endSeconds, durationSeconds, exclude, excludedRegionMode, exclusionMask} = caseState.scope;
+    if (!(startSeconds < endSeconds)) errors.push('case.json.scope.startSeconds must be before endSeconds');
+    if (!near(endSeconds - startSeconds, durationSeconds, 1e-6)) errors.push('case.json.scope.durationSeconds must equal endSeconds - startSeconds');
+    const frameTolerance = 1 / Math.max(1, caseState.source?.fps ?? 1);
+    if (!near(caseState.source?.durationSeconds, durationSeconds, frameTolerance + 1e-6)) {
+      errors.push('case.json.source.durationSeconds must match scope.durationSeconds within one frame');
+    }
+    if ((exclude ?? []).length > 0 && excludedRegionMode === 'none') errors.push('case.json.scope.excludedRegionMode cannot be "none" when exclusions exist');
+    if ((exclude ?? []).length > 0 && (caseState.stages?.qa === 'passed' || complete) && !exclusionMask) errors.push('case.json.scope.exclusionMask is required for excluded regions before QA passes');
+    if (exclusionMask) {
+      const maskPath = safeCasePath(caseDirectory, exclusionMask, 'case.json.scope.exclusionMask', errors);
+      if (maskPath) {
+        try { await access(maskPath); } catch { errors.push(`case.json.scope.exclusionMask does not exist: ${exclusionMask}`); }
+      }
+    }
+  }
+
   const layout = documents.layout;
   const motion = documents.motion;
   const validation = documents.validation;
@@ -169,9 +189,28 @@ export const validateCase = async (caseArgument, {complete = false} = {}) => {
     }
     if (layout.settledFrame?.frame >= layout.canvas?.durationInFrames) errors.push('layout.settledFrame.frame must be inside the timeline');
 
+    const sceneIds = new Set();
+    for (const [index, scene] of (layout.scenes ?? []).entries()) {
+      const at = `layout.scenes[${index}]`;
+      if (sceneIds.has(scene.id)) errors.push(`${at}.id duplicates "${scene.id}"`);
+      sceneIds.add(scene.id);
+      if (scene.startFrame > scene.settledFrame.frame || scene.settledFrame.frame > scene.endFrame) errors.push(`${at}.settledFrame must stay inside the scene range`);
+      if (scene.endFrame >= layout.canvas.durationInFrames) errors.push(`${at}.endFrame must be inside the timeline`);
+      if (caseState.stages?.layout === 'passed' && scene.status !== 'passed') errors.push(`${at}.status must be "passed" before layout passes`);
+      for (const key of ['sourceStill', 'renderStill', 'comparisonStill']) {
+        const evidencePath = safeCasePath(caseDirectory, scene[key], `${at}.${key}`, errors);
+        if (evidencePath) {
+          try { await access(evidencePath); } catch { errors.push(`${at}.${key} does not exist: ${scene[key]}`); }
+        }
+      }
+    }
+
     for (const [index, element] of (layout.elements ?? []).entries()) {
       if (elementIds.has(element.id)) errors.push(`layout.elements[${index}].id duplicates "${element.id}"`);
       elementIds.add(element.id);
+      if (layout.schemaVersion === '1.2' && (!element.sceneId || !sceneIds.has(element.sceneId))) {
+        errors.push(`layout.elements[${index}].sceneId must reference a layout scene`);
+      }
       if (element.asset) {
         const normalizedAsset = element.asset.replaceAll('\\', '/').replace(/^\.\//, '');
         if (!normalizedAsset.startsWith('assets/')) errors.push(`layout.elements[${index}].asset must be a production asset under assets/`);
@@ -184,10 +223,20 @@ export const validateCase = async (caseArgument, {complete = false} = {}) => {
       if (element.type === 'text' && element.assetSource && element.assetSource !== 'recreated') {
         errors.push(`layout.elements[${index}] live text assetSource must be "recreated" or null`);
       }
+      if (layout.schemaVersion === '1.2' && element.type === 'text') {
+        const candidates = element.fontCandidates ?? [];
+        if (candidates.length === 0) errors.push(`layout.elements[${index}].fontCandidates must record at least one candidate`);
+        if (!candidates.some((candidate) => candidate.exact) && candidates.length < 3) {
+          errors.push(`layout.elements[${index}].fontCandidates must record Top 3 candidates unless one is exact`);
+        }
+      }
     }
     const byId = new Map((layout.elements ?? []).map((element) => [element.id, element]));
     for (const [index, element] of (layout.elements ?? []).entries()) {
       if (element.parentId && !byId.has(element.parentId)) errors.push(`layout.elements[${index}].parentId references missing element "${element.parentId}"`);
+      if (element.parentId && byId.has(element.parentId) && layout.schemaVersion === '1.2' && byId.get(element.parentId).sceneId !== element.sceneId) {
+        errors.push(`layout.elements[${index}] must share sceneId with its parent`);
+      }
       const visited = new Set([element.id]);
       let parent = element.parentId;
       while (parent && byId.has(parent)) {
@@ -199,11 +248,29 @@ export const validateCase = async (caseArgument, {complete = false} = {}) => {
         parent = byId.get(parent).parentId;
       }
     }
+
+    const replacementTargets = new Set();
+    for (const [index, replacement] of (layout.replacementTests ?? []).entries()) {
+      const at = `layout.replacementTests[${index}]`;
+      if (!elementIds.has(replacement.elementId)) errors.push(`${at}.elementId references missing element "${replacement.elementId}"`);
+      replacementTargets.add(replacement.elementId);
+      if (caseState.stages?.layout === 'passed' && replacement.status !== 'passed') errors.push(`${at}.status must be "passed" before layout passes`);
+      const stillPath = safeCasePath(caseDirectory, replacement.renderStill, `${at}.renderStill`, errors);
+      if (stillPath) {
+        try { await access(stillPath); } catch { errors.push(`${at}.renderStill does not exist: ${replacement.renderStill}`); }
+      }
+    }
+    if (layout.schemaVersion === '1.2' && caseState.stages?.layout === 'passed') {
+      for (const element of layout.elements ?? []) {
+        if (element.replaceable && !replacementTargets.has(element.id)) errors.push(`replaceable element "${element.id}" requires a passed replacement test`);
+      }
+    }
   }
 
+  const trackKeyframes = (track) => Array.isArray(track) ? track : track?.keyframes ?? [];
   const checkTrack = (track, at, duration) => {
     let previous = -1;
-    for (const [index, keyframe] of track.entries()) {
+    for (const [index, keyframe] of trackKeyframes(track).entries()) {
       if (keyframe.frame <= previous) errors.push(`${at} frames must strictly increase`);
       if (keyframe.frame >= duration) errors.push(`${at}[${index}].frame must be smaller than durationInFrames`);
       previous = keyframe.frame;
@@ -223,19 +290,34 @@ export const validateCase = async (caseArgument, {complete = false} = {}) => {
       if (item.endFrame >= motion.durationInFrames) errors.push(`${at}.endFrame must be smaller than durationInFrames`);
       for (const [property, track] of Object.entries(item.transform ?? {})) {
         checkTrack(track, `${at}.transform.${property}`, motion.durationInFrames);
-        if (property === 'opacity' && track.some(({value}) => value < 0 || value > 1)) errors.push(`${at}.transform.opacity values must stay between 0 and 1`);
-        if (spatialTransformProperties.has(property) && track.length > 2 && item.easingCandidate && item.easingCandidate !== 'linear') {
+        const keyframes = trackKeyframes(track);
+        if (property === 'opacity' && keyframes.some(({value}) => value < 0 || value > 1)) errors.push(`${at}.transform.opacity values must stay between 0 and 1`);
+        if (motion.schemaVersion === '1.2' && spatialTransformProperties.has(property)) {
+          if (Array.isArray(track)) errors.push(`${at}.transform.${property} must use a curve track in schema 1.2`);
+          if (keyframes.length !== 2) errors.push(`${at}.transform.${property} continuous curve must have exactly two endpoint keyframes; keep measurements in evidence`);
+        } else if (spatialTransformProperties.has(property) && keyframes.length > 2 && item.easingCandidate && item.easingCandidate !== 'linear') {
           errors.push(`${at}.transform.${property} restarts nonlinear easing across multiple measured segments; fit one continuous curve or split semantic phases`);
         }
       }
       for (const [property, track] of Object.entries(item.effects ?? {})) checkTrack(track, `${at}.effects.${property}`, motion.durationInFrames);
       if (item.reveal) {
         checkTrack(item.reveal.progress, `${at}.reveal.progress`, motion.durationInFrames);
-        if (item.reveal.progress.some(({value}) => value < 0 || value > 1)) errors.push(`${at}.reveal.progress values must stay between 0 and 1`);
+        if (trackKeyframes(item.reveal.progress).some(({value}) => value < 0 || value > 1)) errors.push(`${at}.reveal.progress values must stay between 0 and 1`);
+        if (motion.schemaVersion === '1.2' && (item.reveal.mode === 'custom' || item.reveal.direction === 'custom')) errors.push(`${at}.reveal custom mode or direction requires a case-specific runtime and cannot use the shared renderer`);
       }
       if (item.textAnimation) {
         if (item.textAnimation.startFrame > item.textAnimation.endFrame) errors.push(`${at}.textAnimation.startFrame cannot be after endFrame`);
         if (item.textAnimation.endFrame >= motion.durationInFrames) errors.push(`${at}.textAnimation.endFrame must be smaller than durationInFrames`);
+        if (motion.schemaVersion === '1.2' && item.textAnimation.preset === 'custom') errors.push(`${at}.textAnimation custom preset requires a case-specific runtime and cannot use the shared renderer`);
+      }
+    }
+    if (motion.schemaVersion === '1.2') {
+      if (caseState.stages?.motion === 'passed' && motion.continuity?.status !== 'passed') errors.push('motion.continuity.status must be "passed" before motion passes');
+      if (motion.continuity?.evidence) {
+        const evidencePath = safeCasePath(caseDirectory, motion.continuity.evidence, 'motion.continuity.evidence', errors);
+        if (evidencePath) {
+          try { await access(evidencePath); } catch { errors.push(`motion.continuity.evidence does not exist: ${motion.continuity.evidence}`); }
+        }
       }
     }
   }
@@ -249,6 +331,15 @@ export const validateCase = async (caseArgument, {complete = false} = {}) => {
     if (validation.status === 'passed') {
       if ((validation.checks ?? []).some((check) => check.status === 'fail')) errors.push('validation.status cannot be passed while a check fails');
       if ((validation.issues ?? []).some((issue) => issue.severity === 'high')) errors.push('validation.status cannot be passed while a high-severity issue remains');
+      if (validation.schemaVersion === '1.2') {
+        const requiredChecks = ['dimensions', 'fps', 'frame-count', 'audio', 'scope', 'live-elements', 'replacement-smoke', 'settled-scenes', 'motion-continuity', 'excluded-regions', 'visual-fidelity'];
+        const notApplicableAllowed = new Set(['replacement-smoke', 'excluded-regions']);
+        const byId = new Map((validation.checks ?? []).map((check) => [check.id, check]));
+        for (const id of requiredChecks) {
+          if (!byId.has(id)) errors.push(`validation passed report requires check "${id}"`);
+          else if (byId.get(id).status !== 'pass' && !(notApplicableAllowed.has(id) && byId.get(id).status === 'not_applicable')) errors.push(`validation check "${id}" must pass`);
+        }
+      }
     }
     const expected = {
       width: caseState.source?.width,
@@ -261,6 +352,26 @@ export const validateCase = async (caseArgument, {complete = false} = {}) => {
         if (validation[side]?.[key] !== value) errors.push(`validation.${side}.${key} must match case.json.source.${key}`);
       }
       if (!near(validation[side]?.fps, caseState.source?.fps, 0.01)) errors.push(`validation.${side}.fps must match case.json.source.fps`);
+    }
+  }
+
+  const qaGates = documents.qaGates;
+  if (qaGates) {
+    if (qaGates.caseId !== caseState.caseId) errors.push('qa-gates.caseId must match case.json.caseId');
+    const byId = new Map((qaGates.checks ?? []).map((check) => [check.id, check]));
+    const live = byId.get('live-elements');
+    if (!live || live.status !== 'pass') errors.push('qa-gates live-elements check must pass');
+    const excluded = byId.get('excluded-regions');
+    if ((caseState.scope?.exclude ?? []).length > 0) {
+      if (!excluded || excluded.status !== 'pass') errors.push('qa-gates excluded-regions check must pass when exclusions exist');
+    } else if (!excluded || !['pass', 'not_applicable'].includes(excluded.status)) {
+      errors.push('qa-gates excluded-regions check must be pass or not_applicable');
+    }
+    for (const [index, check] of (qaGates.checks ?? []).entries()) {
+      const evidencePath = safeCasePath(caseDirectory, check.evidence, `qa-gates.checks[${index}].evidence`, errors);
+      if (evidencePath) {
+        try { await access(evidencePath); } catch { errors.push(`qa-gates.checks[${index}].evidence does not exist: ${check.evidence}`); }
+      }
     }
   }
 

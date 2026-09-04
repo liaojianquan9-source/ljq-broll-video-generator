@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ljq.local/schemas/qa-gates.schema.json",
+  "title": "LJQ B-roll manual QA gates",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "caseId", "checks"],
+  "properties": {
+    "schemaVersion": {"const": "1.2"},
+    "caseId": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
+    "checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "status", "owner", "observation", "evidence"],
+        "properties": {
+          "id": {"enum": ["live-elements", "excluded-regions"]},
+          "status": {"enum": ["pass", "fail", "not_applicable"]},
+          "owner": {"enum": ["preflight", "layout", "motion", "implementation", "qa"]},
+          "observation": {"type": "string", "minLength": 1},
+          "evidence": {"type": "string", "minLength": 1}
+        }
+      }
+    }
+  }
+}

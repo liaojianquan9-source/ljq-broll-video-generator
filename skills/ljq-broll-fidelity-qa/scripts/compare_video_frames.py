@@ -50,6 +50,7 @@ def main() -> None:
     parser.add_argument("render", type=Path)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--ffmpeg")
+    parser.add_argument("--exclude-mask", type=Path, help="Static grayscale mask; white pixels are excluded from visual metrics.")
     args = parser.parse_args()
 
     source = args.source.resolve()
@@ -62,6 +63,9 @@ def main() -> None:
     source_frames = decode(ffmpeg, source, output / "source-frames")
     render_frames = decode(ffmpeg, render, output / "render-frames")
     compared = min(len(source_frames), len(render_frames))
+    exclusion_mask = None
+    if args.exclude_mask:
+        exclusion_mask = Image.open(args.exclude_mask.expanduser().resolve()).convert("L")
 
     deltas: list[float] = []
     neon_counts: list[int] = []
@@ -74,10 +78,18 @@ def main() -> None:
             raise SystemExit(f"Dimension mismatch at frame {index}: {source_image.size} vs {render_image.size}")
         source_rgb = np.asarray(source_image, dtype=np.int16)
         render_rgb = np.asarray(render_image, dtype=np.int16)
-        deltas.append(float(np.abs(source_rgb - render_rgb).mean()))
+        included = np.ones(source_rgb.shape[:2], dtype=bool)
+        if exclusion_mask is not None:
+            if exclusion_mask.size != source_image.size:
+                raise SystemExit(f"Exclusion mask size {exclusion_mask.size} does not match video frame {source_image.size}")
+            included = np.asarray(exclusion_mask, dtype=np.uint8) < 128
+            if not included.any():
+                raise SystemExit("Exclusion mask removes every pixel")
+        absolute = np.abs(source_rgb - render_rgb)
+        deltas.append(float(absolute[included].mean()))
         r, g, b = render_rgb[..., 0], render_rgb[..., 1], render_rgb[..., 2]
         neon = ((r > 185) & (b > 150) & (g < 155)) | ((g > 175) & (b > 180) & (r < 145))
-        neon_counts.append(int(neon.sum()))
+        neon_counts.append(int((neon & included).sum()))
 
     sample_count = min(10, compared)
     sample_indices = sorted({round(value) for value in np.linspace(0, compared - 1, sample_count)})
@@ -98,6 +110,9 @@ def main() -> None:
         canvas.paste(left, (0, y + label_h))
         canvas.paste(right, (thumb_width, y + label_h))
         difference = ImageChops.difference(left, right)
+        if exclusion_mask is not None:
+            resized_mask = exclusion_mask.resize((thumb_width, thumb_height), Image.Resampling.NEAREST)
+            difference.paste(Image.new("RGB", difference.size, "#222222"), mask=resized_mask)
         canvas.paste(difference, (thumb_width * 2, y + label_h))
     canvas.save(output / "comparison.png")
 
@@ -114,6 +129,7 @@ def main() -> None:
         "worst_delta_frame": int(np.argmax(deltas)),
         "render_neon_pixels_worst": max(neon_counts),
         "worst_neon_frame": int(np.argmax(neon_counts)),
+        "excluded_pixels": int((np.asarray(exclusion_mask, dtype=np.uint8) >= 128).sum()) if exclusion_mask is not None else 0,
         "warning": "Sequential comparison assumes aligned decoded frames. Inspect comparison.png and investigate any frame-count mismatch.",
     }
     (output / "report.json").write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")

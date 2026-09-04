@@ -34,4 +34,32 @@ edge_output="$fixture_dir/edge.txt"
 grep -q 'peak-to-peak' "$track_output"
 grep -q 'frames adding more than' "$timeline_output"
 grep -q 'edge (5,54)' "$edge_output"
+
+continuity_case="$fixture_dir/continuity-case"
+mkdir -p "$continuity_case/specs"
+node - "$continuity_case/specs/motion.json" <<'JS'
+const fs = require('fs');
+const output = process.argv[2];
+fs.writeFileSync(output, JSON.stringify({
+  schemaVersion: '1.2', caseId: 'continuity-fixture', durationInFrames: 40,
+  motions: [{id: 'smooth-x', targetId: 'hero', phase: 'entrance', firstVisible: 0, settledFrame: 30, endFrame: 39,
+    transform: {x: {keyframes: [{frame: 0, value: 120}, {frame: 30, value: 0}], interpolation: 'bezier', bezier: [0.2, 0.8, 0.3, 1]}},
+    evidence: {type: 'measured', detail: 'fixture'}, confidence: 'high'}],
+  continuity: {status: 'needs_review', evidence: 'evidence/motion/continuity.json', windows: []}
+}, null, 2));
+JS
+node "$project_dir/skills/ljq-broll-replica/scripts/analyze-motion-continuity.mjs" "$continuity_case"
+grep -q '"status": "passed"' "$continuity_case/evidence/motion/continuity.json"
+node - "$continuity_case/specs/motion.json" <<'JS'
+const fs = require('fs');
+const file = process.argv[2];
+const motion = require(file);
+motion.motions[0].transform.x.bezier = [0.3, 1.8, 0.7, -0.8];
+fs.writeFileSync(file, JSON.stringify(motion, null, 2));
+JS
+if node "$project_dir/skills/ljq-broll-replica/scripts/analyze-motion-continuity.mjs" "$continuity_case"; then
+  echo "Expected reversing curve to fail continuity analysis" >&2
+  exit 1
+fi
+grep -q '"status": "failed"' "$continuity_case/evidence/motion/continuity.json"
 echo "Motion forensics tests passed"
