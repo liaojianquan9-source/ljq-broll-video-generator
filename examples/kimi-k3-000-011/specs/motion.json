@@ -1,0 +1,1560 @@
+{
+  "schemaVersion": "1.2",
+  "caseId": "kimi-k3-000-011-test",
+  "durationInFrames": 330,
+  "motions": [
+    {
+      "id": "overlay-camera-pullback",
+      "targetId": "@camera",
+      "phase": "camera",
+      "firstVisible": 0,
+      "settledFrame": 82,
+      "endFrame": 103,
+      "transform": {
+        "scaleX": {
+          "keyframes": [
+            {
+              "frame": 8,
+              "value": 1.325
+            },
+            {
+              "frame": 82,
+              "value": 1
+            }
+          ],
+          "interpolation": "bezier",
+          "bezier": [
+            0.203,
+            0.398,
+            0.009,
+            1
+          ]
+        },
+        "scaleY": {
+          "keyframes": [
+            {
+              "frame": 8,
+              "value": 1.325
+            },
+            {
+              "frame": 82,
+              "value": 1
+            }
+          ],
+          "interpolation": "bezier",
+          "bezier": [
+            0.203,
+            0.398,
+            0.009,
+            1
+          ]
+        }
+      },
+      "evidence": {
+        "type": "observed",
+        "detail": "evidence/motion/overlay-forensics.md：显示器与上字纹理共同测量；0–8保持，8–82收束。",
+        "frames": [
+          0,
+          82,
+          103
+        ]
+      },
+      "confidence": "high"
+    },
+    {
+      "id": "earth-character-reveal",
+      "targetId": "earth-title",
+      "phase": "entrance",
+      "firstVisible": 1,
+      "settledFrame": 14,
+      "endFrame": 103,
+      "textAnimation": {
+        "preset": "ghost-drop-in",
+        "startFrame": 1,
+        "endFrame": 14,
+        "seed": 23,
+        "staggerFrames": 3.5,
+        "stretchY": 1,
+        "distancePx": 25,
+        "blurPx": 1,
+        "direction": "bottom-to-top",
+        "ghostLayers": 1,
+        "ghostOffsetPx": 0,
+        "ghostOpacity": 0
+      },
+      "evidence": {
+        "type": "observed",
+        "detail": "地/球/上首次可见约1/4/8；逐字短上收约25px，无可靠多层残影。",
+        "frames": [
+          1,
+          14,
+          103
+        ]
+      },
+      "confidence": "high"
+    },
+    {
+      "id": "parameter-label-soft-entry",
+      "targetId": "parameter-label",
+      "phase": "entrance",
+      "firstVisible": 12,
+      "settledFrame": 33,
+      "endFrame": 103,
+      "transform": {
+        "opacity": {
+          "keyframes": [
+            {
+              "frame": 12,
+              "value": 0
+            },
+            {
+              "frame": 33,
+              "value": 1
+            }
+          ],
+          "interpolation": "linear"
+        },
+        "blurPx": {
+          "keyframes": [
+            {
+              "frame": 12,
+              "value": 3
+            },
+            {
+              "frame": 33,
+              "value": 0
+            }
+          ],
+          "interpolation": "bezier",
+          "bezier": [
+            0.2,
+            0.6,
+            0.3,
+            1
+          ]
+        },
+        "y": {
+          "keyframes": [
+            {
+              "frame": 12,
+              "value": -20
+            },
+            {
+              "frame": 30,
+              "value": 0
+            }
+          ],
+          "interpolation": "bezier",
+          "bezier": [
+            0.2,
+            0.6,
+            0.3,
+            1
+          ]
+        }
+      },
+      "evidence": {
+        "type": "observed",
+        "detail": "参数量整段低透明度显影；轻微下移，共享镜头缩小。",
+        "frames": [
+          12,
+          33,
+          103
+        ]
+      },
+      "confidence": "high"
+    },
+    {
+      "id": "emphasis-da-soft-entry",
+      "targetId": "emphasis-da",
+      "phase": "entrance",
+      "firstVisible": 11,
+      "settledFrame": 33,
+      "endFrame": 103,
+      "transform": {
+        "opacity": {
+          "keyframes": [
+            {
+              "frame": 10,
+              "value": 0
+            },
+            {
+              "frame": 33,
+              "value": 1
+            }
+          ],
+          "interpolation": "linear"
+        },
+        "blurPx": {
+          "keyframes": [
+            {
+              "frame": 11,
+              "value": 2
+            },
+            {
+              "frame": 30,
+              "value": 0
+            }
+          ],
+          "interpolation": "bezier",
+          "bezier": [
+            0.2,
+            0.6,
+            0.3,
+            1
+          ]
+        },
+        "y": {
+          "keyframes": [
+            {
+              "frame": 11,
+              "value": -18
+            },
+            {
+              "frame": 26,
+              "value": 0
+            }
+          ],
+          "interpolation": "bezier",
+          "bezier": [
+            0.2,
+            0.6,
+            0.3,
+            1
+          ]
+        }
+      },
+      "evidence": {
+        "type": "observed",
+        "detail": "大字独立近线性低透明度显影；保持青蓝色。",
+        "frames": [
+          11,
+          33,
+          103
+        ]
+      },
+      "confidence": "high"
+    },
+    {
+      "id": "open-source-rise",
+      "targetId": "open-source-title",
+      "phase": "entrance",
+      "firstVisible": 32,
+      "settledFrame": 66,
+      "endFrame": 103,
+      "transform": {
+        "y": {
+          "keyframes": [
+            {
+              "frame": 32,
+              "value": 55.5
+            },
+            {
+              "frame": 66,
+              "value": 0
+            }
+          ],
+          "interpolation": "bezier",
+          "bezier": [
+            0.117,
+            0.539,
+            0.425,
+            1
+          ]
+        }
+      },
+      "evidence": {
+        "type": "observed",
+        "detail": "四字整组在32已可见，camera校正后y55.5→0；非逐字。",
+        "frames": [
+          32,
+          66,
+          103
+        ]
+      },
+      "confidence": "high"
+    },
+    {
+      "id": "parameter-incoming-dissolve",
+      "targetId": "@transition",
+      "phase": "transition",
+      "firstVisible": 92,
+      "settledFrame": 103,
+      "endFrame": 103,
+      "transform": {
+        "opacity": {
+          "keyframes": [
+            {
+              "frame": 92,
+              "value": 0
+            },
+            {
+              "frame": 103,
+              "value": 1
+            }
+          ],
+          "interpolation": "bezier",
+          "bezier": [
+            0.42,
+            0,
+            0.58,
+            1
+          ]
+        }
+      },
+      "evidence": {
+        "type": "observed",
+        "detail": "旧场92开始淡出，95约.77/98约.34/101约.02，103消失；A-roll为白色。",
+        "frames": [
+          92,
+          103,
+          103
+        ]
+      },
+      "confidence": "medium"
+    },
+    {
+      "id": "parameter-camera-pullback",
+      "targetId": "@camera",
+      "phase": "camera",
+      "firstVisible": 95,
+      "settledFrame": 171,
+      "endFrame": 171,
+      "transform": {
+        "scaleX": {
+          "keyframes": [
+            {
+              "frame": 99,
+              "value": 1.643677712076979
+            },
+            {
+              "frame": 171,
+              "value": 0.8990115291055184
+            }
+          ],
+          "interpolation": "bezier",
+          "bezier": [
+            0.234,
+            0.494,
+            0.992,
+            0.824
+          ]
+        },
+        "scaleY": {
+          "keyframes": [
+            {
+              "frame": 99,
+              "value": 1.643677712076979
+            },
+            {
+              "frame": 171,
+              "value": 0.8990115291055184
+            }
+          ],
+          "interpolation": "bezier",
+          "bezier": [
+            0.234,
+            0.494,
+            0.992,
+            0.824
+          ]
+        }
+      },
+      "evidence": {
+        "type": "observed",
+        "detail": "evidence/motion/parameter-forensics.md；164仅为布局采样，持续缩小至171；单曲线拟合。",
+        "frames": [
+          95,
+          171,
+          171
+        ]
+      },
+      "confidence": "medium"
+    },
+    {
+      "id": "number-stagger-converge",
+      "targetId": "parameter-main-number",
+      "phase": "entrance",
+      "firstVisible": 99,
+      "settledFrame": 124,
+      "endFrame": 171,
+      "textAnimation": {
+        "preset": "ghost-drop-in",
+        "startFrame": 83,
+        "endFrame": 124,
+        "seed": 23,
+        "staggerFrames": 4,
+        "stretchY": 3.5,
+        "distancePx": 0,
+        "blurPx": 2,
+        "direction": "bottom-to-top",
+        "ghostLayers": 1,
+        "ghostOffsetPx": 0,
+        "ghostOpacity": 0
+      },
+      "effects": {
+        "brightness": {
+          "keyframes": [
+            {
+              "frame": 99,
+              "value": 0.45
+            },
+            {
+              "frame": 124,
+              "value": 1
+            }
+          ],
+          "interpolation": "bezier",
+          "bezier": [
+            0.2,
+            0.6,
+            0.3,
+            1
+          ]
+        }
+      },
+      "evidence": {
+        "type": "observed",
+        "detail": "五位数字依次纵向收束，约108/112/116/120/124落定；不计数，不添加detached ghost。",
+        "frames": [
+          99,
+          124,
+          171
+        ]
+      },
+      "confidence": "medium"
+    },
+    {
+      "id": "billion-converge",
+      "targetId": "parameter-billion-unit",
+      "phase": "entrance",
+      "firstVisible": 115,
+      "settledFrame": 132,
+      "endFrame": 171,
+      "textAnimation": {
+        "preset": "ghost-drop-in",
+        "startFrame": 115,
+        "endFrame": 132,
+        "seed": 23,
+        "staggerFrames": 0,
+        "stretchY": 3.4,
+        "distancePx": 0,
+        "blurPx": 3,
+        "direction": "bottom-to-top",
+        "ghostLayers": 1,
+        "ghostOffsetPx": 0,
+        "ghostOpacity": 0
+      },
+      "transform": {
+        "scaleX": {
+          "keyframes": [
+            {
+              "frame": 115,
+              "value": 1.14
+            },
+            {
+              "frame": 132,
+              "value": 1
+            }
+          ],
+          "interpolation": "bezier",
+          "bezier": [
+            0.2,
+            0.6,
+            0.3,
+            1
+          ]
+        }
+      },
+      "evidence": {
+        "type": "observed",
+        "detail": "亿独立纵向拉伸后收束，115低透明度，132落定。",
+        "frames": [
+          115,
+          132,
+          171
+        ]
+      },
+      "confidence": "medium"
+    },
+    {
+      "id": "parameter-unit-converge",
+      "targetId": "parameter-unit-label",
+      "phase": "entrance",
+      "firstVisible": 115,
+      "settledFrame": 131,
+      "endFrame": 171,
+      "textAnimation": {
+        "preset": "ghost-drop-in",
+        "startFrame": 115,
+        "endFrame": 131,
+        "seed": 23,
+        "staggerFrames": 3,
+        "stretchY": 2.1,
+        "distancePx": 80,
+        "blurPx": 2,
+        "direction": "bottom-to-top",
+        "ghostLayers": 1,
+        "ghostOffsetPx": 0,
+        "ghostOpacity": 0
+      },
+      "transform": {
+        "x": {
+          "keyframes": [
+            {
+              "frame": 115,
+              "value": 35
+            },
+            {
+              "frame": 131,
+              "value": 0
+            }
+          ],
+          "interpolation": "bezier",
+          "bezier": [
+            0.2,
+            0.6,
+            0.3,
+            1
+          ]
+        }
+      },
+      "evidence": {
+        "type": "observed",
+        "detail": "个参数分字从偏右下收束，过渡期间可发生原片同类临时重叠。",
+        "frames": [
+          115,
+          131,
+          171
+        ]
+      },
+      "confidence": "medium"
+    },
+    {
+      "id": "parameter-bracket-top-entry",
+      "targetId": "parameter-bracket-top",
+      "phase": "entrance",
+      "firstVisible": 124,
+      "settledFrame": 133,
+      "endFrame": 171,
+      "transform": {
+        "scaleX": {
+          "keyframes": [
+            {
+              "frame": 124,
+              "value": 0.8
+            },
+            {
+              "frame": 133,
+              "value": 1
+            }
+          ],
+          "interpolation": "bezier",
+          "bezier": [
+            0.2,
+            0.6,
+            0.3,
+            1
+          ]
+        },
+        "scaleY": {
+          "keyframes": [
+            {
+              "frame": 124,
+              "value": 0.8
+            },
+            {
+              "frame": 133,
+              "value": 1
+            }
+          ],
+          "interpolation": "bezier",
+          "bezier": [
+            0.2,
+            0.6,
+            0.3,
+            1
+          ]
+        },
+        "opacity": {
+          "keyframes": [
+            {
+              "frame": 124,
+              "value": 0
+            },
+            {
+              "frame": 133,
+              "value": 1
+            }
+          ],
+          "interpolation": "bezier",
+          "bezier": [
+            0.2,
+            0.6,
+            0.3,
+            1
+          ]
+        }
+      },
+      "evidence": {
+        "type": "observed",
+        "detail": "括线局部缩放与显影；没有可靠tip-to-tip擦开证据。",
+        "frames": [
+          124,
+          133,
+          171
+        ]
+      },
+      "confidence": "medium"
+    },
+    {
+      "id": "parameter-bracket-right-entry",
+      "targetId": "parameter-bracket-right",
+      "phase": "entrance",
+      "firstVisible": 125,
+      "settledFrame": 133,
+      "endFrame": 171,
+      "transform": {
+        "scaleX": {
+          "keyframes": [
+            {
+              "frame": 125,
+              "value": 0.8
+            },
+            {
+              "frame": 133,
+              "value": 1
+            }
+          ],
+          "interpolation": "bezier",
+          "bezier": [
+            0.2,
+            0.6,
+            0.3,
+            1
+          ]
+        },
+        "scaleY": {
+          "keyframes": [
+            {
+              "frame": 125,
+              "value": 0.8
+            },
+            {
+              "frame": 133,
+              "value": 1
+            }
+          ],
+          "interpolation": "bezier",
+          "bezier": [
+            0.2,
+            0.6,
+            0.3,
+            1
+          ]
+        },
+        "opacity": {
+          "keyframes": [
+            {
+              "frame": 125,
+              "value": 0
+            },
+            {
+              "frame": 133,
+              "value": 1
+            }
+          ],
+          "interpolation": "bezier",
+          "bezier": [
+            0.2,
+            0.6,
+            0.3,
+            1
+          ]
+        }
+      },
+      "evidence": {
+        "type": "observed",
+        "detail": "括线局部缩放与显影；没有可靠tip-to-tip擦开证据。",
+        "frames": [
+          125,
+          133,
+          171
+        ]
+      },
+      "confidence": "medium"
+    },
+    {
+      "id": "annotation-line-1-entry",
+      "targetId": "annotation-line-1",
+      "phase": "entrance",
+      "firstVisible": 125,
+      "settledFrame": 137,
+      "endFrame": 171,
+      "transform": {
+        "opacity": {
+          "keyframes": [
+            {
+              "frame": 125,
+              "value": 0
+            },
+            {
+              "frame": 137,
+              "value": 1
+            }
+          ],
+          "interpolation": "bezier",
+          "bezier": [
+            0.2,
+            0.6,
+            0.3,
+            1
+          ]
+        },
+        "blurPx": {
+          "keyframes": [
+            {
+              "frame": 125,
+              "value": 3
+            },
+            {
+              "frame": 137,
+              "value": 0
+            }
+          ],
+          "interpolation": "bezier",
+          "bezier": [
+            0.2,
+            0.6,
+            0.3,
+            1
+          ]
+        },
+        "y": {
+          "keyframes": [
+            {
+              "frame": 125,
+              "value": 8
+            },
+            {
+              "frame": 137,
+              "value": 0
+            }
+          ],
+          "interpolation": "bezier",
+          "bezier": [
+            0.2,
+            0.6,
+            0.3,
+            1
+          ]
+        }
+      },
+      "evidence": {
+        "type": "observed",
+        "detail": "小注两行错时从模糊/低透明度收束，不硬套整段打字。",
+        "frames": [
+          125,
+          137,
+          171
+        ]
+      },
+      "confidence": "medium"
+    },
+    {
+      "id": "annotation-line-2-entry",
+      "targetId": "annotation-line-2",
+      "phase": "entrance",
+      "firstVisible": 127,
+      "settledFrame": 137,
+      "endFrame": 171,
+      "transform": {
+        "opacity": {
+          "keyframes": [
+            {
+              "frame": 127,
+              "value": 0
+            },
+            {
+              "frame": 137,
+              "value": 1
+            }
+          ],
+          "interpolation": "bezier",
+          "bezier": [
+            0.2,
+            0.6,
+            0.3,
+            1
+          ]
+        },
+        "blurPx": {
+          "keyframes": [
+            {
+              "frame": 127,
+              "value": 3
+            },
+            {
+              "frame": 137,
+              "value": 0
+            }
+          ],
+          "interpolation": "bezier",
+          "bezier": [
+            0.2,
+            0.6,
+            0.3,
+            1
+          ]
+        },
+        "y": {
+          "keyframes": [
+            {
+              "frame": 127,
+              "value": 8
+            },
+            {
+              "frame": 137,
+              "value": 0
+            }
+          ],
+          "interpolation": "bezier",
+          "bezier": [
+            0.2,
+            0.6,
+            0.3,
+            1
+          ]
+        }
+      },
+      "evidence": {
+        "type": "observed",
+        "detail": "小注两行错时从模糊/低透明度收束，不硬套整段打字。",
+        "frames": [
+          127,
+          137,
+          171
+        ]
+      },
+      "confidence": "medium"
+    },
+    {
+      "id": "weights-soft-reveal",
+      "targetId": "parameter-weights-script",
+      "phase": "entrance",
+      "firstVisible": 129,
+      "settledFrame": 140,
+      "endFrame": 171,
+      "reveal": {
+        "mode": "wipe",
+        "direction": "left-to-right",
+        "progress": {
+          "keyframes": [
+            {
+              "frame": 129,
+              "value": 0
+            },
+            {
+              "frame": 140,
+              "value": 1
+            }
+          ],
+          "interpolation": "bezier",
+          "bezier": [
+            0.2,
+            0.6,
+            0.3,
+            1
+          ]
+        }
+      },
+      "transform": {
+        "opacity": {
+          "keyframes": [
+            {
+              "frame": 129,
+              "value": 0.15
+            },
+            {
+              "frame": 140,
+              "value": 1
+            }
+          ],
+          "interpolation": "bezier",
+          "bezier": [
+            0.2,
+            0.6,
+            0.3,
+            1
+          ]
+        },
+        "blurPx": {
+          "keyframes": [
+            {
+              "frame": 129,
+              "value": 2
+            },
+            {
+              "frame": 140,
+              "value": 0
+            }
+          ],
+          "interpolation": "bezier",
+          "bezier": [
+            0.2,
+            0.6,
+            0.3,
+            1
+          ]
+        }
+      },
+      "evidence": {
+        "type": "observed",
+        "detail": "W先出现，软左到右显影；仅是可见行为近似，不宣称原始手写路径。",
+        "frames": [
+          129,
+          140,
+          171
+        ]
+      },
+      "confidence": "medium"
+    },
+    {
+      "id": "parameter-hairline-entry",
+      "targetId": "parameter-hairline",
+      "phase": "entrance",
+      "firstVisible": 129,
+      "settledFrame": 140,
+      "endFrame": 171,
+      "transform": {
+        "opacity": {
+          "keyframes": [
+            {
+              "frame": 129,
+              "value": 0
+            },
+            {
+              "frame": 140,
+              "value": 1
+            }
+          ],
+          "interpolation": "bezier",
+          "bezier": [
+            0.2,
+            0.6,
+            0.3,
+            1
+          ]
+        }
+      },
+      "evidence": {
+        "type": "observed",
+        "detail": "低置信度细节跟随Weights显影，无独立扫线。",
+        "frames": [
+          129,
+          140,
+          171
+        ]
+      },
+      "confidence": "low"
+    },
+    {
+      "id": "space-entry-camera-pullback",
+      "targetId": "@camera",
+      "phase": "camera",
+      "firstVisible": 172,
+      "settledFrame": 269,
+      "endFrame": 301,
+      "transform": {
+        "scaleX": {
+          "keyframes": [
+            {
+              "frame": 172,
+              "value": 1.411962901061736
+            },
+            {
+              "frame": 269,
+              "value": 0.9943823835136908
+            }
+          ],
+          "interpolation": "bezier",
+          "bezier": [
+            0.112,
+            1,
+            0.388,
+            0.963
+          ]
+        },
+        "scaleY": {
+          "keyframes": [
+            {
+              "frame": 172,
+              "value": 1.411962901061736
+            },
+            {
+              "frame": 269,
+              "value": 0.9943823835136908
+            }
+          ],
+          "interpolation": "bezier",
+          "bezier": [
+            0.112,
+            1,
+            0.388,
+            0.963
+          ]
+        }
+      },
+      "evidence": {
+        "type": "observed",
+        "detail": "evidence/motion/space-geometry.md：主框中心(640,360)，172宽888→247宽630→269宽625；右上球边沿支持共同镜头，左下球额外位移另轨。",
+        "frames": [
+          172,
+          269,
+          301
+        ]
+      },
+      "confidence": "high"
+    },
+    {
+      "id": "kimi-title-focus",
+      "targetId": "kimi-title",
+      "phase": "entrance",
+      "firstVisible": 172,
+      "settledFrame": 212,
+      "endFrame": 301,
+      "transform": {
+        "blurPx": {
+          "keyframes": [
+            {
+              "frame": 172,
+              "value": 10
+            },
+            {
+              "frame": 212,
+              "value": 0
+            }
+          ],
+          "interpolation": "bezier",
+          "bezier": [
+            0.25,
+            0.15,
+            0.6,
+            1
+          ]
+        }
+      },
+      "evidence": {
+        "type": "observed",
+        "detail": "入场已可见，强模糊逐步清晰；保留静态基础辉光。",
+        "frames": [
+          172,
+          212,
+          301
+        ]
+      },
+      "confidence": "high"
+    },
+    {
+      "id": "k3-title-focus",
+      "targetId": "k3-title",
+      "phase": "entrance",
+      "firstVisible": 172,
+      "settledFrame": 212,
+      "endFrame": 301,
+      "transform": {
+        "blurPx": {
+          "keyframes": [
+            {
+              "frame": 172,
+              "value": 8
+            },
+            {
+              "frame": 212,
+              "value": 0
+            }
+          ],
+          "interpolation": "bezier",
+          "bezier": [
+            0.25,
+            0.15,
+            0.6,
+            1
+          ]
+        }
+      },
+      "evidence": {
+        "type": "observed",
+        "detail": "入场已可见，强模糊逐步清晰；保留静态基础辉光。",
+        "frames": [
+          172,
+          212,
+          301
+        ]
+      },
+      "confidence": "high"
+    },
+    {
+      "id": "moon-title-fill-characters",
+      "targetId": "moon-title-fill",
+      "phase": "entrance",
+      "firstVisible": 186,
+      "settledFrame": 212,
+      "endFrame": 301,
+      "textAnimation": {
+        "preset": "ghost-drop-in",
+        "startFrame": 186,
+        "endFrame": 208,
+        "seed": 23,
+        "staggerFrames": 2,
+        "stretchY": 1.18,
+        "distancePx": 30,
+        "blurPx": 2,
+        "direction": "top-to-bottom",
+        "ghostLayers": 1,
+        "ghostOffsetPx": 0,
+        "ghostOpacity": 0
+      },
+      "evidence": {
+        "type": "observed",
+        "detail": "月之暗面逐字从左至右显现，纵向拉伸/下落收束；材质与轮廓使用相同live glyph。",
+        "frames": [
+          186,
+          212,
+          301
+        ]
+      },
+      "confidence": "medium"
+    },
+    {
+      "id": "moon-title-outline-characters",
+      "targetId": "moon-title-outline",
+      "phase": "entrance",
+      "firstVisible": 186,
+      "settledFrame": 212,
+      "endFrame": 301,
+      "textAnimation": {
+        "preset": "ghost-drop-in",
+        "startFrame": 186,
+        "endFrame": 208,
+        "seed": 23,
+        "staggerFrames": 2,
+        "stretchY": 1.18,
+        "distancePx": 30,
+        "blurPx": 2,
+        "direction": "top-to-bottom",
+        "ghostLayers": 1,
+        "ghostOffsetPx": 0,
+        "ghostOpacity": 0
+      },
+      "evidence": {
+        "type": "observed",
+        "detail": "月之暗面逐字从左至右显现，纵向拉伸/下落收束；材质与轮廓使用相同live glyph。",
+        "frames": [
+          186,
+          212,
+          301
+        ]
+      },
+      "confidence": "medium"
+    },
+    {
+      "id": "planet-top-approach",
+      "targetId": "planet-top-right",
+      "phase": "entrance",
+      "firstVisible": 172,
+      "settledFrame": 247,
+      "endFrame": 301,
+      "transform": {
+        "x": {
+          "keyframes": [
+            {
+              "frame": 172,
+              "value": 7
+            },
+            {
+              "frame": 247,
+              "value": 0
+            }
+          ],
+          "interpolation": "bezier",
+          "bezier": [
+            0.15,
+            0.7,
+            0.25,
+            1
+          ]
+        }
+      },
+      "evidence": {
+        "type": "observed",
+        "detail": "右上球主要共享镜头；左缘1048/964/933/925由camera基本解释，只补小幅位置残差。",
+        "frames": [
+          172,
+          247,
+          301
+        ]
+      },
+      "confidence": "medium"
+    },
+    {
+      "id": "planet-bottom-approach",
+      "targetId": "planet-bottom-left",
+      "phase": "entrance",
+      "firstVisible": 172,
+      "settledFrame": 247,
+      "endFrame": 301,
+      "transform": {
+        "y": {
+          "keyframes": [
+            {
+              "frame": 172,
+              "value": 134
+            },
+            {
+              "frame": 247,
+              "value": 0
+            }
+          ],
+          "interpolation": "bezier",
+          "bezier": [
+            0.18,
+            0.7,
+            0.3,
+            1
+          ]
+        }
+      },
+      "evidence": {
+        "type": "observed",
+        "detail": "左下球共享镜头且从下方额外上移；源片弧线证据见space-geometry.md；基于批准的独立NASA球体裁切校准localY134→0，不能把固定屏幕x处弧线当固定纹理点。",
+        "frames": [
+          172,
+          247,
+          301
+        ]
+      },
+      "confidence": "medium"
+    },
+    {
+      "id": "space-exit-camera-push",
+      "targetId": "@camera",
+      "phase": "camera",
+      "firstVisible": 269,
+      "settledFrame": 301,
+      "endFrame": 301,
+      "transform": {
+        "scaleX": {
+          "keyframes": [
+            {
+              "frame": 269,
+              "value": 1
+            },
+            {
+              "frame": 301,
+              "value": 1.423
+            }
+          ],
+          "interpolation": "linear"
+        },
+        "scaleY": {
+          "keyframes": [
+            {
+              "frame": 269,
+              "value": 1
+            },
+            {
+              "frame": 301,
+              "value": 1.423
+            }
+          ],
+          "interpolation": "linear"
+        }
+      },
+      "evidence": {
+        "type": "observed",
+        "detail": "269最小，270开始近线性放大；框中心不变；放大同时作用于背景与主标题，月球随之出画。",
+        "frames": [
+          269,
+          301,
+          301
+        ]
+      },
+      "confidence": "high"
+    },
+    {
+      "id": "space-white-through-live-glyphs",
+      "targetId": "@transition",
+      "phase": "transition",
+      "firstVisible": 278,
+      "settledFrame": 294,
+      "endFrame": 301,
+      "reveal": {
+        "mode": "fade",
+        "progress": {
+          "keyframes": [
+            {
+              "frame": 278,
+              "value": 0
+            },
+            {
+              "frame": 294,
+              "value": 1
+            }
+          ],
+          "interpolation": "bezier",
+          "bezier": [
+            0.42,
+            0,
+            0.58,
+            1
+          ]
+        }
+      },
+      "evidence": {
+        "type": "observed",
+        "detail": "原片人物先透过KIMI/K3字面，人物排除，改为白色经同一live text蒙版透出。",
+        "frames": [
+          278,
+          294,
+          301
+        ]
+      },
+      "confidence": "medium"
+    },
+    {
+      "id": "space-outgoing-dissolve",
+      "targetId": "@transition",
+      "phase": "transition",
+      "firstVisible": 294,
+      "settledFrame": 302,
+      "endFrame": 302,
+      "transform": {
+        "opacity": {
+          "keyframes": [
+            {
+              "frame": 294,
+              "value": 1
+            },
+            {
+              "frame": 302,
+              "value": 0
+            }
+          ],
+          "interpolation": "bezier",
+          "bezier": [
+            0.42,
+            0,
+            0.58,
+            1
+          ]
+        }
+      },
+      "evidence": {
+        "type": "observed",
+        "detail": "294以后全场与口播交叠，302基本完成；排除人物后落在纯白。",
+        "frames": [
+          294,
+          302,
+          302
+        ]
+      },
+      "confidence": "medium"
+    }
+  ],
+  "continuity": {
+    "status": "passed",
+    "evidence": "evidence/motion/continuity.json",
+    "windows": [
+      {
+        "targetId": "@camera",
+        "property": "scaleX",
+        "startFrame": 8,
+        "endFrame": 82,
+        "duplicateFrames": 0,
+        "unexpectedReversals": 0,
+        "maxVelocityJump": 0.097118
+      },
+      {
+        "targetId": "@camera",
+        "property": "scaleY",
+        "startFrame": 8,
+        "endFrame": 82,
+        "duplicateFrames": 0,
+        "unexpectedReversals": 0,
+        "maxVelocityJump": 0.097118
+      },
+      {
+        "targetId": "parameter-label",
+        "property": "y",
+        "startFrame": 12,
+        "endFrame": 30,
+        "duplicateFrames": 0,
+        "unexpectedReversals": 0,
+        "maxVelocityJump": 0.148068
+      },
+      {
+        "targetId": "emphasis-da",
+        "property": "y",
+        "startFrame": 11,
+        "endFrame": 26,
+        "duplicateFrames": 0,
+        "unexpectedReversals": 0,
+        "maxVelocityJump": 0.175903
+      },
+      {
+        "targetId": "open-source-title",
+        "property": "y",
+        "startFrame": 32,
+        "endFrame": 66,
+        "duplicateFrames": 0,
+        "unexpectedReversals": 0,
+        "maxVelocityJump": 0.191868
+      },
+      {
+        "targetId": "@camera",
+        "property": "scaleX",
+        "startFrame": 99,
+        "endFrame": 171,
+        "duplicateFrames": 0,
+        "unexpectedReversals": 0,
+        "maxVelocityJump": 0.501548
+      },
+      {
+        "targetId": "@camera",
+        "property": "scaleY",
+        "startFrame": 99,
+        "endFrame": 171,
+        "duplicateFrames": 0,
+        "unexpectedReversals": 0,
+        "maxVelocityJump": 0.501548
+      },
+      {
+        "targetId": "parameter-billion-unit",
+        "property": "scaleX",
+        "startFrame": 115,
+        "endFrame": 132,
+        "duplicateFrames": 0,
+        "unexpectedReversals": 0,
+        "maxVelocityJump": 0.157611
+      },
+      {
+        "targetId": "parameter-unit-label",
+        "property": "x",
+        "startFrame": 115,
+        "endFrame": 131,
+        "duplicateFrames": 0,
+        "unexpectedReversals": 0,
+        "maxVelocityJump": 0.166998
+      },
+      {
+        "targetId": "parameter-bracket-top",
+        "property": "scaleX",
+        "startFrame": 124,
+        "endFrame": 133,
+        "duplicateFrames": 0,
+        "unexpectedReversals": 0,
+        "maxVelocityJump": 0.279492
+      },
+      {
+        "targetId": "parameter-bracket-top",
+        "property": "scaleY",
+        "startFrame": 124,
+        "endFrame": 133,
+        "duplicateFrames": 0,
+        "unexpectedReversals": 0,
+        "maxVelocityJump": 0.279492
+      },
+      {
+        "targetId": "parameter-bracket-right",
+        "property": "scaleX",
+        "startFrame": 125,
+        "endFrame": 133,
+        "duplicateFrames": 0,
+        "unexpectedReversals": 0,
+        "maxVelocityJump": 0.295104
+      },
+      {
+        "targetId": "parameter-bracket-right",
+        "property": "scaleY",
+        "startFrame": 125,
+        "endFrame": 133,
+        "duplicateFrames": 0,
+        "unexpectedReversals": 0,
+        "maxVelocityJump": 0.295104
+      },
+      {
+        "targetId": "annotation-line-1",
+        "property": "y",
+        "startFrame": 125,
+        "endFrame": 137,
+        "duplicateFrames": 0,
+        "unexpectedReversals": 0,
+        "maxVelocityJump": 0.217185
+      },
+      {
+        "targetId": "annotation-line-2",
+        "property": "y",
+        "startFrame": 127,
+        "endFrame": 137,
+        "duplicateFrames": 0,
+        "unexpectedReversals": 0,
+        "maxVelocityJump": 0.259987
+      },
+      {
+        "targetId": "@camera",
+        "property": "scaleX",
+        "startFrame": 172,
+        "endFrame": 269,
+        "duplicateFrames": 0,
+        "unexpectedReversals": 0,
+        "maxVelocityJump": 0.129816
+      },
+      {
+        "targetId": "@camera",
+        "property": "scaleY",
+        "startFrame": 172,
+        "endFrame": 269,
+        "duplicateFrames": 0,
+        "unexpectedReversals": 0,
+        "maxVelocityJump": 0.129816
+      },
+      {
+        "targetId": "planet-top-right",
+        "property": "x",
+        "startFrame": 172,
+        "endFrame": 247,
+        "duplicateFrames": 0,
+        "unexpectedReversals": 0,
+        "maxVelocityJump": 0.052875
+      },
+      {
+        "targetId": "planet-bottom-left",
+        "property": "y",
+        "startFrame": 172,
+        "endFrame": 247,
+        "duplicateFrames": 0,
+        "unexpectedReversals": 0,
+        "maxVelocityJump": 0.041136
+      },
+      {
+        "targetId": "@camera",
+        "property": "scaleX",
+        "startFrame": 269,
+        "endFrame": 301,
+        "duplicateFrames": 0,
+        "unexpectedReversals": 0,
+        "maxVelocityJump": 0
+      },
+      {
+        "targetId": "@camera",
+        "property": "scaleY",
+        "startFrame": 269,
+        "endFrame": 301,
+        "duplicateFrames": 0,
+        "unexpectedReversals": 0,
+        "maxVelocityJump": 0
+      }
+    ]
+  }
+}

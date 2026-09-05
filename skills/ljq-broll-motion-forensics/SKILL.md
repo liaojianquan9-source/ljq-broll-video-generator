@@ -2,7 +2,7 @@
 name: ljq-broll-motion-forensics
 description: "对已通过落定布局的连续 B-roll 做逐元素动效取证，分开场景、镜头、元素和文字内部行为，并输出可验证的连续 motion.json。用于入场、出场、缩放、擦开、叠影和转场取证；不重新排版或猜测原软件参数。"
 metadata:
-  version: "1.2.0"
+  version: "1.3.0"
 ---
 
 # B-roll 动效取证
@@ -28,7 +28,7 @@ metadata:
    ```
 
    只有证据表明过冲/回弹或设计性停留时，才分成语义上独立的 motion 或显式允许 reversal/hold。
-6. **表达特效。** 共享 runtime 支持水平/垂直/斜向 reveal 以及 `ghost-drop-in`。新版合同禁止用 `custom` 伪装尚未实现的能力；缺能力时先扩展 runtime 并添加渲染测试。
+6. **表达特效。** 接入或修改Remotion前必须读取 [references/implementation-checks.md](references/implementation-checks.md)，沿实际composition确认使用的runtime和每个字段执行映射。共享runtime的能力不代表自定义入口也支持；缺能力时先补实现与探针，不用预设名称或`custom`伪装完成。
 7. **运行连续性分析。**
 
    ```bash

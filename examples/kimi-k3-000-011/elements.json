@@ -1,0 +1,595 @@
+{
+  "caseId": "kimi-k3-000-011-test",
+  "summaryOnly": true,
+  "note": "Public element index; not a complete case contract or QA archive.",
+  "elements": [
+    {
+      "id": "space-title-group",
+      "sceneId": "scene-kimi-space-title",
+      "parentId": null,
+      "type": "group",
+      "content": null,
+      "replaceable": false,
+      "bounds": [
+        0,
+        0,
+        100,
+        100
+      ]
+    },
+    {
+      "id": "space-backdrop-group",
+      "sceneId": "scene-kimi-space-title",
+      "parentId": null,
+      "type": "group",
+      "content": null,
+      "replaceable": false,
+      "bounds": [
+        0,
+        0,
+        100,
+        100
+      ]
+    },
+    {
+      "id": "overlay-blank-background",
+      "sceneId": "scene-overlay-title",
+      "parentId": null,
+      "type": "background",
+      "content": null,
+      "replaceable": false,
+      "bounds": [
+        0,
+        0,
+        100,
+        100
+      ]
+    },
+    {
+      "id": "earth-title",
+      "sceneId": "scene-overlay-title",
+      "parentId": null,
+      "type": "text",
+      "content": "地球上",
+      "replaceable": true,
+      "bounds": [
+        9.609375,
+        18.611111,
+        26.640625,
+        25.277778
+      ]
+    },
+    {
+      "id": "parameter-label",
+      "sceneId": "scene-overlay-title",
+      "parentId": null,
+      "type": "text",
+      "content": "参数量",
+      "replaceable": true,
+      "bounds": [
+        18.359375,
+        45.694444,
+        18.046875,
+        8.888889
+      ]
+    },
+    {
+      "id": "emphasis-da",
+      "sceneId": "scene-overlay-title",
+      "parentId": null,
+      "type": "text",
+      "content": "大",
+      "replaceable": true,
+      "bounds": [
+        7.65625,
+        49.027778,
+        15.46875,
+        29.027778
+      ]
+    },
+    {
+      "id": "open-source-title",
+      "sceneId": "scene-overlay-title",
+      "parentId": null,
+      "type": "text",
+      "content": "开源模型",
+      "replaceable": true,
+      "bounds": [
+        60,
+        25,
+        34.921875,
+        50
+      ]
+    },
+    {
+      "id": "parameter-tech-background",
+      "sceneId": "scene-parameter-board",
+      "parentId": null,
+      "type": "background",
+      "content": null,
+      "replaceable": false,
+      "bounds": [
+        0,
+        0,
+        100,
+        100
+      ]
+    },
+    {
+      "id": "parameter-radial-glow",
+      "sceneId": "scene-parameter-board",
+      "parentId": null,
+      "type": "effect",
+      "content": null,
+      "replaceable": false,
+      "bounds": [
+        13.90625,
+        29.166667,
+        67.421875,
+        49.305556
+      ]
+    },
+    {
+      "id": "parameter-top-rule",
+      "sceneId": "scene-parameter-board",
+      "parentId": null,
+      "type": "line",
+      "content": null,
+      "replaceable": false,
+      "bounds": [
+        0,
+        9.444444,
+        100,
+        0.222222
+      ]
+    },
+    {
+      "id": "parameter-bottom-rule",
+      "sceneId": "scene-parameter-board",
+      "parentId": null,
+      "type": "line",
+      "content": null,
+      "replaceable": false,
+      "bounds": [
+        0,
+        90.416667,
+        100,
+        0.222222
+      ]
+    },
+    {
+      "id": "parameter-left-rule",
+      "sceneId": "scene-parameter-board",
+      "parentId": null,
+      "type": "shape",
+      "content": null,
+      "replaceable": false,
+      "bounds": [
+        6.015625,
+        0,
+        0.125,
+        100
+      ]
+    },
+    {
+      "id": "parameter-right-rule",
+      "sceneId": "scene-parameter-board",
+      "parentId": null,
+      "type": "shape",
+      "content": null,
+      "replaceable": false,
+      "bounds": [
+        93.75,
+        0,
+        0.125,
+        100
+      ]
+    },
+    {
+      "id": "parameter-rule-weathering",
+      "sceneId": "scene-parameter-board",
+      "parentId": null,
+      "type": "effect",
+      "content": null,
+      "replaceable": false,
+      "bounds": [
+        0,
+        0,
+        100,
+        100
+      ]
+    },
+    {
+      "id": "parameter-main-number",
+      "sceneId": "scene-parameter-board",
+      "parentId": null,
+      "type": "text",
+      "content": "28000",
+      "replaceable": true,
+      "bounds": [
+        17.8125,
+        32.361111,
+        34.296875,
+        37.638889
+      ]
+    },
+    {
+      "id": "parameter-billion-unit",
+      "sceneId": "scene-parameter-board",
+      "parentId": null,
+      "type": "text",
+      "content": "亿",
+      "replaceable": true,
+      "bounds": [
+        52.890625,
+        33.055556,
+        13.671875,
+        38.055556
+      ]
+    },
+    {
+      "id": "parameter-bracket-top",
+      "sceneId": "scene-parameter-board",
+      "parentId": null,
+      "type": "line",
+      "content": null,
+      "replaceable": false,
+      "bounds": [
+        66.71875,
+        38.333333,
+        10.9375,
+        0.194444
+      ]
+    },
+    {
+      "id": "parameter-bracket-right",
+      "sceneId": "scene-parameter-board",
+      "parentId": null,
+      "type": "shape",
+      "content": null,
+      "replaceable": false,
+      "bounds": [
+        77.5,
+        38.333333,
+        0.109375,
+        11.527778
+      ]
+    },
+    {
+      "id": "parameter-hairline",
+      "sceneId": "scene-parameter-board",
+      "parentId": null,
+      "type": "line",
+      "content": null,
+      "replaceable": false,
+      "bounds": [
+        65.46875,
+        60.277778,
+        10.3125,
+        0.111111
+      ]
+    },
+    {
+      "id": "parameter-annotation",
+      "sceneId": "scene-parameter-board",
+      "parentId": null,
+      "type": "group",
+      "content": "*大语言模型（LLM）内部的\n权重的数量",
+      "replaceable": true,
+      "bounds": [
+        69.84375,
+        51.944444,
+        9.6875,
+        5.833333
+      ]
+    },
+    {
+      "id": "annotation-line-1",
+      "sceneId": "scene-parameter-board",
+      "parentId": "parameter-annotation",
+      "type": "text",
+      "content": "*大语言模型（LLM）内部的",
+      "replaceable": false,
+      "bounds": [
+        69.84375,
+        51.944444,
+        9.6875,
+        1.805556
+      ]
+    },
+    {
+      "id": "annotation-line-2",
+      "sceneId": "scene-parameter-board",
+      "parentId": "parameter-annotation",
+      "type": "text",
+      "content": "权重的数量",
+      "replaceable": false,
+      "bounds": [
+        75.859375,
+        55.972222,
+        3.671875,
+        1.805556
+      ]
+    },
+    {
+      "id": "parameter-weights-script",
+      "sceneId": "scene-parameter-board",
+      "parentId": null,
+      "type": "text",
+      "content": "Weights",
+      "replaceable": true,
+      "bounds": [
+        65,
+        54.027778,
+        10.078125,
+        9.027778
+      ]
+    },
+    {
+      "id": "parameter-unit-label",
+      "sceneId": "scene-parameter-board",
+      "parentId": null,
+      "type": "text",
+      "content": "个参数",
+      "replaceable": true,
+      "bounds": [
+        66.328125,
+        59.861111,
+        13.671875,
+        11.805556
+      ]
+    },
+    {
+      "id": "parameter-vignette",
+      "sceneId": "scene-parameter-board",
+      "parentId": null,
+      "type": "effect",
+      "content": null,
+      "replaceable": false,
+      "bounds": [
+        0,
+        0,
+        100,
+        100
+      ]
+    },
+    {
+      "id": "space-background",
+      "sceneId": "scene-kimi-space-title",
+      "parentId": null,
+      "type": "background",
+      "content": null,
+      "replaceable": false,
+      "bounds": [
+        0,
+        0,
+        100,
+        100
+      ]
+    },
+    {
+      "id": "moon-title-fill",
+      "sceneId": "scene-kimi-space-title",
+      "parentId": "space-backdrop-group",
+      "type": "text",
+      "content": "月之暗面",
+      "replaceable": true,
+      "bounds": [
+        11.5625,
+        13.055556,
+        76.015625,
+        75.833333
+      ]
+    },
+    {
+      "id": "moon-title-fill-texture",
+      "sceneId": "scene-kimi-space-title",
+      "parentId": "moon-title-fill",
+      "type": "image",
+      "content": null,
+      "replaceable": true,
+      "bounds": [
+        11.5625,
+        13.055556,
+        76.015625,
+        75.833333
+      ]
+    },
+    {
+      "id": "moon-title-outline",
+      "sceneId": "scene-kimi-space-title",
+      "parentId": "space-backdrop-group",
+      "type": "text",
+      "content": "月之暗面",
+      "replaceable": false,
+      "bounds": [
+        11.5625,
+        13.055556,
+        76.015625,
+        75.833333
+      ]
+    },
+    {
+      "id": "planet-top-right",
+      "sceneId": "scene-kimi-space-title",
+      "parentId": null,
+      "type": "image",
+      "content": null,
+      "replaceable": true,
+      "bounds": [
+        72.03125,
+        -40.416667,
+        51.25,
+        91.111111
+      ]
+    },
+    {
+      "id": "planet-bottom-left",
+      "sceneId": "scene-kimi-space-title",
+      "parentId": null,
+      "type": "image",
+      "content": null,
+      "replaceable": true,
+      "bounds": [
+        -24.296875,
+        52.083333,
+        52.8125,
+        93.888889
+      ]
+    },
+    {
+      "id": "k3-glow",
+      "sceneId": "scene-kimi-space-title",
+      "parentId": "space-title-group",
+      "type": "effect",
+      "content": null,
+      "replaceable": false,
+      "bounds": [
+        53.671875,
+        37.916667,
+        19.140625,
+        25.277778
+      ]
+    },
+    {
+      "id": "title-frame-top",
+      "sceneId": "scene-kimi-space-title",
+      "parentId": "space-title-group",
+      "type": "line",
+      "content": null,
+      "replaceable": false,
+      "bounds": [
+        25.390625,
+        37.083333,
+        49.21875,
+        0.138889
+      ]
+    },
+    {
+      "id": "title-frame-bottom",
+      "sceneId": "scene-kimi-space-title",
+      "parentId": "space-title-group",
+      "type": "line",
+      "content": null,
+      "replaceable": false,
+      "bounds": [
+        25.390625,
+        62.916667,
+        49.21875,
+        0.138889
+      ]
+    },
+    {
+      "id": "title-frame-left",
+      "sceneId": "scene-kimi-space-title",
+      "parentId": "space-title-group",
+      "type": "shape",
+      "content": null,
+      "replaceable": false,
+      "bounds": [
+        25.390625,
+        37.083333,
+        0.078125,
+        25.972222
+      ]
+    },
+    {
+      "id": "title-frame-right",
+      "sceneId": "scene-kimi-space-title",
+      "parentId": "space-title-group",
+      "type": "shape",
+      "content": null,
+      "replaceable": false,
+      "bounds": [
+        74.609375,
+        37.083333,
+        0.078125,
+        25.972222
+      ]
+    },
+    {
+      "id": "title-node-top-left",
+      "sceneId": "scene-kimi-space-title",
+      "parentId": "space-title-group",
+      "type": "shape",
+      "content": null,
+      "replaceable": false,
+      "bounds": [
+        25.078125,
+        36.527778,
+        0.625,
+        1.111111
+      ]
+    },
+    {
+      "id": "title-node-bottom-right",
+      "sceneId": "scene-kimi-space-title",
+      "parentId": "space-title-group",
+      "type": "shape",
+      "content": null,
+      "replaceable": false,
+      "bounds": [
+        74.296875,
+        62.361111,
+        0.625,
+        1.111111
+      ]
+    },
+    {
+      "id": "kimi-title",
+      "sceneId": "scene-kimi-space-title",
+      "parentId": "space-title-group",
+      "type": "text",
+      "content": "KIMI",
+      "replaceable": true,
+      "bounds": [
+        29.21875,
+        41.944444,
+        23.90625,
+        16.25
+      ]
+    },
+    {
+      "id": "title-separator",
+      "sceneId": "scene-kimi-space-title",
+      "parentId": "space-title-group",
+      "type": "shape",
+      "content": null,
+      "replaceable": false,
+      "bounds": [
+        54.773477,
+        48.62507,
+        1.546796,
+        2.74986
+      ]
+    },
+    {
+      "id": "k3-title",
+      "sceneId": "scene-kimi-space-title",
+      "parentId": "space-title-group",
+      "type": "text",
+      "content": "K3",
+      "replaceable": true,
+      "bounds": [
+        57.65625,
+        41.805556,
+        12.734375,
+        16.527778
+      ]
+    },
+    {
+      "id": "excluded-blank-background",
+      "sceneId": "scene-a-roll-excluded",
+      "parentId": null,
+      "type": "background",
+      "content": null,
+      "replaceable": false,
+      "bounds": [
+        0,
+        0,
+        100,
+        100
+      ]
+    }
+  ]
+}

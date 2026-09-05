@@ -1,6 +1,6 @@
 # 静帧与复用门
 
-本文定义新版 layout 合同中必须留下的可验证产物。素材判断和字体方法由 `$ljq-broll-layout-structure` 的 `asset-recovery.md` 与 `static-compositing.md` 负责；动线连续性由 `$ljq-broll-motion-forensics` 负责。
+本文定义新版 layout 合同中必须留下的可验证产物。素材判断由布局 owner 的 [asset-recovery.md](../../ljq-broll-layout-structure/references/asset-recovery.md) 负责；视觉顺序、配色、字体/材质、蒙版和替换判断必须使用 [static-compositing.md](../../ljq-broll-layout-structure/references/static-compositing.md)。动线连续性由 `$ljq-broll-motion-forensics` 负责。
 
 ## 逐场景静帧
 
@@ -12,7 +12,7 @@
 - 并排或叠放图 `comparisonStill`；
 - 实际观看后的 `status` 与 `observation`。
 
-核对顺序为：画布/裁切 → 主体边界与比例 → 位置/层级/留白 → 字体轮廓 → 渐变/描边/辉光/纹理。任一场景未通过时，`layout` 不得设为 `passed`。
+按静态视觉判断完成逐场景核对。任一场景未通过时，`layout` 不得设为 `passed`。
 
 ## 可编辑边界
 
@@ -30,7 +30,7 @@
 - 媒体替换为不同宽高比；
 - 主题色改变。
 
-替换后如果出现旧字形、旧数字、旧辉光轮廓或旧素材像素，该测试失败。默认 props 恢复后才进行最终完整渲染。
+替换后如果出现旧字形、旧数字、旧辉光轮廓或旧素材像素，该测试失败。测试配色、适配风险和已接受的局部重叠按 [替换冒烟与视觉验收](../../ljq-broll-layout-structure/references/static-compositing.md#替换冒烟与视觉验收) 分别记录；默认 props 恢复后才进行最终完整渲染。
 
 ## 完成标准
 

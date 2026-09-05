@@ -2,7 +2,9 @@
 workspace/
 remotion-skills.zip
 fidelity-first-broll-skill.zip
-node_modules/
-.venv/
+node_modules
+.venv
 __pycache__/
 *.pyc
+examples/kimi-k3-000-011/output/
+.swift-module-cache

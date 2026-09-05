@@ -11,7 +11,7 @@
 ## 坐标与边界
 
 - 继承源宽高、方向和 fps，不强制套 16:9。
-- `bounds` 使用画布百分比 `[left, top, width, height]`，允许 left/top 为负或宽高越出画布。
+- `bounds` 使用画布百分比 `[left, top, width, height]`，允许 left/top 为负或宽高越出画布；实际可见边界与容器的测量口径按 [static-compositing.md](static-compositing.md#实际可见边界)。
 - `anchor` 是元素内部 0..1 的锚点。
 - 细线、文字基线可在 Remotion 中做局部像素微调，但合同仍保存百分比主边界。
 
@@ -32,4 +32,4 @@
 
 ## 视觉复核
 
-源落定帧与 Remotion still 做并排和半透明叠放。按画布/裁切、主体边界、层级、对齐留白、文字占位、表面样式的顺序修正。这里只检查静态终点。
+源落定帧与 Remotion still 做并排和半透明叠放。核对比例、配色、字体/材质、蒙版或替换适配时，必须使用 [static-compositing.md](static-compositing.md) 的判断顺序与完成证据。这里只检查静态终点。

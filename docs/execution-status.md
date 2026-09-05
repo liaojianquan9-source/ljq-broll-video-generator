@@ -11,6 +11,7 @@
 | 合同校验 | `validate-case.mjs <case-dir> [--complete]` | Schema、范围、文件、哈希、场景 still、替换 still、稳定 ID、连续性和 QA gates |
 | 逐场景静帧 | layout Skill 的 `render-layout-scene.sh` | 原片/Remotion/比较 still 与场景状态 |
 | 替换冒烟 | layout Skill 的 `render-replacement-still.sh` | 替换 props 后的 still 与元素测试状态 |
+| 安全回归探针 | `render-review-stills.mjs <case-dir> --mode static --dry-run`后实际导出 | 新目录、真实props、批量still与待审manifest；不覆盖批准基准或写QA状态 |
 | 动效测量 | motion Skill 的 `motion_track.py`、`element_timeline.py`、`edge_trace.py` | 平移/旋转、出现时序、文字顺序和线条揭示证据 |
 | 连续性分析 | `analyze-motion-continuity.mjs <case-dir>` | 空间曲线的重复帧、反向、近停与速度尖峰证据 |
 | Remotion 案例初始化 | `initialize-case-remotion.mjs <case-dir>` | 可编辑 composition、runtime、props schema 与静态 motion 占位 |
@@ -32,7 +33,15 @@
 - 观看比较证据后决定视觉通过，或把最大根因归给 layout、motion、implementation；
 - 复杂背景下的元素抠取与 visible-only 完整性判断。
 
-因此 QA 默认保持待审，不会仅凭像素分数自动宣布高保真通过；人工观看证据并写入门禁后才能通过。
+因此 QA 默认保持待审，不会仅凭像素分数自动宣布高保真通过；人工观看、所有必需门和最终validator均满足时才可声明全流程通过。
+
+## 新增真实案例与限制
+
+[KIMI 0–11秒案例](../examples/kimi-k3-000-011/README.md)使用GPT-6 Astra + Remotion，四场景、42元素、26条motion，静态与动态整体效果已获用户认可。保留本机完整case，公开展示包提供成片、上下对照与实际源码；不是包含全部取证文件的完整合同归档。
+
+当前比较器只支持单张静态排除mask，本案例排除区域会随场景和穿字转场变化。因此自动QA仍待审，不能用宽泛或占位mask绕过，也不因用户认可而改成passed。另有字体与纹理近似、长文案局部重叠等已知差异。
+
+安全still工具要求composition声明并实际消费`motionEnabled`，通用模板尚未默认提供该入口；无此能力时先补静态入口。工具默认寻找macOS Chrome，其他系统需指定浏览器路径。较低成本模型尚未做同条件视觉制作测试。
 
 ## 当前尚未建设
 
@@ -43,4 +52,4 @@
 - 从压平视频精确反推原字体、原插件、AE/剪映工程参数；
 - 两个不同类型真实案例的新版流程验收。
 
-前五项是明确延后的下一阶段；最后一项需要用户提供新的真实切口后才能验收。仓库现有两个案例是研究基线，不冒充新版流程通过结果。
+前五项是明确延后的下一阶段；最后一项仍未达到。新KIMI案例的人工认可不冒充两个不同类型案例的完整自动验收，两个旧案例继续保留为研究基线。

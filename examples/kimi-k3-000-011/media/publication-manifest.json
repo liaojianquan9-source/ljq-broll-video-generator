@@ -1,0 +1,368 @@
+{
+  "caseId": "kimi-k3-000-011-test",
+  "model": "GPT-6 Astra",
+  "renderer": "Remotion",
+  "durationSeconds": 11,
+  "fps": 30,
+  "frameCount": 330,
+  "videoDimensions": [
+    1280,
+    1680
+  ],
+  "paneDimensions": [
+    1280,
+    720
+  ],
+  "labels": [
+    "原视频效果",
+    "生成的复刻效果",
+    "GPT-6 Astra + Remotion"
+  ],
+  "labelFont": "PingFangSC-Semibold",
+  "referenceAndReplicaUnmodified": true,
+  "inputs": [
+    {
+      "filename": "reference.mp4",
+      "sha256": "5ecda4e05010fcec4508e7f49bd0bb4fd008e479aea76ea29c42e49f5e662a30",
+      "metadata": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1280,
+            "height": 720,
+            "r_frame_rate": "30/1",
+            "avg_frame_rate": "30/1",
+            "duration": "11.000000",
+            "nb_frames": "330",
+            "nb_read_frames": "330"
+          }
+        ],
+        "format": {
+          "duration": "11.000000",
+          "size": "5949645"
+        }
+      }
+    },
+    {
+      "filename": "final.mp4",
+      "sha256": "882f2e47a082e323ee2d9a34a6a74f123a4f718f262f557cb43b9108aebe5536",
+      "metadata": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1280,
+            "height": 720,
+            "r_frame_rate": "30/1",
+            "avg_frame_rate": "30/1",
+            "duration": "11.000000",
+            "nb_frames": "330",
+            "nb_read_frames": "330",
+            "side_data_list": [
+              {}
+            ]
+          }
+        ],
+        "format": {
+          "duration": "11.000000",
+          "size": "2056298"
+        }
+      }
+    }
+  ],
+  "stillFramesZeroBased": [
+    82,
+    164,
+    247,
+    329
+  ],
+  "preview": {
+    "filename": "comparison-preview.gif",
+    "dimensions": [
+      480,
+      630
+    ],
+    "fps": 10,
+    "durationSeconds": 11,
+    "note": "Reduced-size, reduced-frame-rate GIF preview only; not a fidelity-verification render."
+  },
+  "outputs": [
+    {
+      "filename": "label-source.png",
+      "bytes": 9914,
+      "sha256": "629816bc2814384953496a795ec2b358c9d6acb7878f1f5fc8a90b43f2945ed1"
+    },
+    {
+      "filename": "label-replica.png",
+      "bytes": 12167,
+      "sha256": "d685a1802e5ea80ca7db61a6d794f83eb1c2a4781bce7727063dd69894d20f7b"
+    },
+    {
+      "filename": "label-model.png",
+      "bytes": 11260,
+      "sha256": "b09595dbb7556b03a669a2d25f25b996e76de45c613e42d64c70ce4fa377b02d"
+    },
+    {
+      "filename": "top-bottom-comparison.mp4",
+      "bytes": 4089697,
+      "sha256": "2cd1a7ce05ec2de2d1ad68152ad38d67a4e8b56999de7e3c773a84b3f8cd80e4"
+    },
+    {
+      "filename": "comparison-preview.gif",
+      "bytes": 6152987,
+      "sha256": "032a8ff6a66b2ffbb0b4f644fb78c0b08070623c54426fa63253aaf757a781a8"
+    },
+    {
+      "filename": "comparison-frame-082.png",
+      "bytes": 1087977,
+      "sha256": "cf70a20e8434830ccabbf5d6f7e44a6dafdff38dd716ebf8d98d38cc61fe3808"
+    },
+    {
+      "filename": "comparison-frame-164.png",
+      "bytes": 570616,
+      "sha256": "3f50497b15e3a6551c1ded90dc7f881eaa29512c61bd35e1dd6341966f18d7bc"
+    },
+    {
+      "filename": "comparison-frame-247.png",
+      "bytes": 791828,
+      "sha256": "5a428cbd801bdc6aa61b086e7f61426933089b379b7d82dfb30363369cbba6c4"
+    },
+    {
+      "filename": "comparison-frame-329.png",
+      "bytes": 653373,
+      "sha256": "06aacd86d866de65289262b6d7fb921e2d19c6d9141c501995cb61b1295e5106"
+    }
+  ],
+  "validation": {
+    "video": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "h264",
+          "codec_type": "video",
+          "width": 1280,
+          "height": 1680,
+          "r_frame_rate": "30/1",
+          "avg_frame_rate": "30/1",
+          "duration": "11.000000",
+          "nb_frames": "330",
+          "nb_read_frames": "330"
+        }
+      ],
+      "format": {
+        "duration": "11.000000",
+        "size": "4089697"
+      }
+    },
+    "gif": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "gif",
+          "codec_type": "video",
+          "width": 480,
+          "height": 630,
+          "r_frame_rate": "10/1",
+          "avg_frame_rate": "10/1",
+          "duration": "11.000000",
+          "nb_frames": "110",
+          "nb_read_frames": "110"
+        }
+      ],
+      "format": {
+        "duration": "11.000000",
+        "size": "6152987"
+      }
+    }
+  },
+  "commands": [
+    [
+      "ffprobe",
+      "-v",
+      "error",
+      "-count_frames",
+      "-show_entries",
+      "stream=codec_name,codec_type,width,height,r_frame_rate,avg_frame_rate,nb_frames,nb_read_frames,duration:format=duration,size",
+      "-of",
+      "json",
+      "<REFERENCE.mp4>"
+    ],
+    [
+      "ffprobe",
+      "-v",
+      "error",
+      "-count_frames",
+      "-show_entries",
+      "stream=codec_name,codec_type,width,height,r_frame_rate,avg_frame_rate,nb_frames,nb_read_frames,duration:format=duration,size",
+      "-of",
+      "json",
+      "<REPLICA.mp4>"
+    ],
+    [
+      "swift",
+      "-module-cache-path",
+      "<OUTPUT_DIR>/.swift-module-cache",
+      "<OUTPUT_DIR>/render-labels.swift",
+      "<OUTPUT_DIR>",
+      "PingFangSC-Semibold"
+    ],
+    [
+      "ffmpeg",
+      "-y",
+      "-hide_banner",
+      "-loglevel",
+      "error",
+      "-i",
+      "<REFERENCE.mp4>",
+      "-i",
+      "<REPLICA.mp4>",
+      "-loop",
+      "1",
+      "-framerate",
+      "30",
+      "-i",
+      "<OUTPUT_DIR>/label-source.png",
+      "-loop",
+      "1",
+      "-framerate",
+      "30",
+      "-i",
+      "<OUTPUT_DIR>/label-replica.png",
+      "-loop",
+      "1",
+      "-framerate",
+      "30",
+      "-i",
+      "<OUTPUT_DIR>/label-model.png",
+      "-filter_complex",
+      "[0:v]trim=end_frame=330,setpts=N/(30*TB),setsar=1[src];[1:v]trim=end_frame=330,setpts=N/(30*TB),setsar=1[rep];[2:v]setsar=1[top];[3:v]setsar=1[mid];[4:v]setsar=1[foot];[top][src][mid][rep][foot]vstack=inputs=5:shortest=1,format=yuv420p[v]",
+      "-map",
+      "[v]",
+      "-an",
+      "-frames:v",
+      "330",
+      "-r",
+      "30",
+      "-c:v",
+      "libx264",
+      "-crf",
+      "18",
+      "-preset",
+      "medium",
+      "-movflags",
+      "+faststart",
+      "<OUTPUT_DIR>/top-bottom-comparison.mp4"
+    ],
+    [
+      "ffmpeg",
+      "-y",
+      "-hide_banner",
+      "-loglevel",
+      "error",
+      "-i",
+      "<OUTPUT_DIR>/top-bottom-comparison.mp4",
+      "-vf",
+      "select=eq(n\\,82)",
+      "-frames:v",
+      "1",
+      "-update",
+      "1",
+      "<OUTPUT_DIR>/comparison-frame-082.png"
+    ],
+    [
+      "ffmpeg",
+      "-y",
+      "-hide_banner",
+      "-loglevel",
+      "error",
+      "-i",
+      "<OUTPUT_DIR>/top-bottom-comparison.mp4",
+      "-vf",
+      "select=eq(n\\,164)",
+      "-frames:v",
+      "1",
+      "-update",
+      "1",
+      "<OUTPUT_DIR>/comparison-frame-164.png"
+    ],
+    [
+      "ffmpeg",
+      "-y",
+      "-hide_banner",
+      "-loglevel",
+      "error",
+      "-i",
+      "<OUTPUT_DIR>/top-bottom-comparison.mp4",
+      "-vf",
+      "select=eq(n\\,247)",
+      "-frames:v",
+      "1",
+      "-update",
+      "1",
+      "<OUTPUT_DIR>/comparison-frame-247.png"
+    ],
+    [
+      "ffmpeg",
+      "-y",
+      "-hide_banner",
+      "-loglevel",
+      "error",
+      "-i",
+      "<OUTPUT_DIR>/top-bottom-comparison.mp4",
+      "-vf",
+      "select=eq(n\\,329)",
+      "-frames:v",
+      "1",
+      "-update",
+      "1",
+      "<OUTPUT_DIR>/comparison-frame-329.png"
+    ],
+    [
+      "ffmpeg",
+      "-y",
+      "-hide_banner",
+      "-loglevel",
+      "error",
+      "-i",
+      "<OUTPUT_DIR>/top-bottom-comparison.mp4",
+      "-filter_complex",
+      "[0:v]fps=10,scale=480:630:flags=lanczos,split[a][b];[a]palettegen=max_colors=128:stats_mode=diff[p];[b][p]paletteuse=dither=bayer:bayer_scale=4:diff_mode=rectangle[v]",
+      "-map",
+      "[v]",
+      "-an",
+      "-loop",
+      "0",
+      "<OUTPUT_DIR>/comparison-preview.gif"
+    ],
+    [
+      "ffprobe",
+      "-v",
+      "error",
+      "-count_frames",
+      "-show_entries",
+      "stream=codec_name,codec_type,width,height,r_frame_rate,avg_frame_rate,nb_frames,nb_read_frames,duration:format=duration,size",
+      "-of",
+      "json",
+      "<OUTPUT_DIR>/top-bottom-comparison.mp4"
+    ],
+    [
+      "ffprobe",
+      "-v",
+      "error",
+      "-count_frames",
+      "-show_entries",
+      "stream=codec_name,codec_type,width,height,r_frame_rate,avg_frame_rate,nb_frames,nb_read_frames,duration:format=duration,size",
+      "-of",
+      "json",
+      "<OUTPUT_DIR>/comparison-preview.gif"
+    ]
+  ],
+  "commandsNote": "Angle-bracket placeholders identify caller-supplied paths, not literal shell commands."
+}

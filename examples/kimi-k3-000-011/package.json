@@ -1,0 +1,21 @@
+{
+  "name": "kimi-k3-000-011-example",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "still": "remotion still remotion/composition.tsx LjqBrollCase output/review.png --frame=247 --public-dir=remotion/public",
+    "render": "remotion render remotion/composition.tsx LjqBrollCase output/generated.mp4 --public-dir=remotion/public --codec=h264"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.518",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "remotion": "4.0.518",
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "typescript": "5.9.3"
+  }
+}
