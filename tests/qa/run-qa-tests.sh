@@ -62,6 +62,26 @@ if (report.status !== 'needs_revision') process.exit(1);
 if (!report.checks.some((item) => item.id === 'live-elements' && item.status === 'fail')) process.exit(1);
 JS
 node "$master/scripts/record-qa-gates.mjs" "$gate_dir" --live-status pass --live-evidence evidence/layout/scene-comparison.bin --live-observation "Runtime audit found no screenshot-backed live elements." --excluded-status not_applicable --excluded-evidence evidence/layout/scene-comparison.bin --excluded-observation "No excluded regions."
+node - "$gate_dir/validation/gates.json" <<'JS'
+const fs = require('fs');
+const file = process.argv[2];
+const gates = require(file);
+gates.checks[0].evidence = 'evidence/layout/missing-live-proof.bin';
+fs.writeFileSync(file, JSON.stringify(gates, null, 2));
+JS
+"$master/.venv/bin/python" "$qa/scripts/qa-case.py" "$gate_dir" --visual-status pass --observation "Missing gate evidence must block QA."
+node - "$gate_dir/validation/report.json" <<'JS'
+const report = require(process.argv[2]);
+if (report.status !== 'needs_revision') process.exit(1);
+if (!report.checks.some((item) => item.id === 'live-elements' && item.status === 'fail')) process.exit(1);
+JS
+node - "$gate_dir/validation/gates.json" <<'JS'
+const fs = require('fs');
+const file = process.argv[2];
+const gates = require(file);
+gates.checks[0].evidence = 'evidence/layout/scene-comparison.bin';
+fs.writeFileSync(file, JSON.stringify(gates, null, 2));
+JS
 "$master/.venv/bin/python" "$qa/scripts/qa-case.py" "$gate_dir" --visual-status pass --observation "Pixels and required gates pass."
 node - "$gate_dir/validation/report.json" <<'JS'
 const report = require(process.argv[2]);

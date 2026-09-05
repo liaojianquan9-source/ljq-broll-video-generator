@@ -47,6 +47,24 @@ def rel(path: Path, case_directory: Path) -> str:
     return path.relative_to(case_directory).as_posix()
 
 
+def gate_evidence(case_directory: Path, gate: dict | None, expected_case: bool) -> tuple[bool, str]:
+    if not expected_case:
+        return False, "QA gates caseId does not match case.json"
+    if not gate:
+        return False, "Missing QA gate"
+    evidence = gate.get("evidence")
+    if not isinstance(evidence, str) or not evidence:
+        return False, "QA gate evidence path is missing"
+    resolved = (case_directory / evidence).resolve()
+    try:
+        resolved.relative_to(case_directory)
+    except ValueError:
+        return False, "QA gate evidence must stay inside the case directory"
+    if not resolved.is_file():
+        return False, f"QA gate evidence does not exist: {evidence}"
+    return True, gate.get("observation", "QA gate evidence exists")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("case_directory", type=Path)
@@ -128,14 +146,26 @@ def main() -> None:
         continuity_ok = motion is not None and motion.get("continuity", {}).get("status") == "passed" and (case_directory / motion["continuity"]["evidence"]).is_file()
         check("motion-continuity", continuity_ok, f"status={(motion or {}).get('continuity', {}).get('status', 'missing')}", "motion", "continuity")
 
-        manual = {item.get("id"): item for item in qa_gates.get("checks", [])}
+        manual_checks = qa_gates.get("checks", [])
+        manual = {item.get("id"): item for item in manual_checks}
+        manual_ids = [item.get("id") for item in manual_checks]
+        gates_unique = len(manual_ids) == len(set(manual_ids))
+        gates_match_case = qa_gates.get("caseId") == state["caseId"]
         live = manual.get("live-elements")
-        check("live-elements", bool(live and live.get("status") == "pass"), live.get("observation", "Missing live-elements audit") if live else "Missing live-elements audit", (live or {}).get("owner", "layout"), "reusability")
+        live_evidence_ok, live_detail = gate_evidence(case_directory, live, gates_match_case)
+        live_ok = gates_unique and bool(live and live.get("status") == "pass") and live_evidence_ok
+        if not gates_unique:
+            live_detail = "QA gate IDs must be unique"
+        check("live-elements", live_ok, live_detail, (live or {}).get("owner", "layout"), "reusability")
         excluded = manual.get("excluded-regions")
         exclusions_exist = bool(scope.get("exclude"))
-        excluded_ok = bool(excluded and excluded.get("status") == "pass") if exclusions_exist else bool(excluded and excluded.get("status") in {"pass", "not_applicable"})
+        excluded_evidence_ok, excluded_detail = gate_evidence(case_directory, excluded, gates_match_case)
+        expected_excluded_status = {"pass"} if exclusions_exist else {"pass", "not_applicable"}
+        excluded_ok = gates_unique and bool(excluded and excluded.get("status") in expected_excluded_status) and excluded_evidence_ok
+        if not gates_unique:
+            excluded_detail = "QA gate IDs must be unique"
         excluded_status = None if exclusions_exist else (excluded or {}).get("status", "fail")
-        check("excluded-regions", excluded_ok, excluded.get("observation", "Missing excluded-regions audit") if excluded else "Missing excluded-regions audit", (excluded or {}).get("owner", "qa"), "scope", excluded_status)
+        check("excluded-regions", excluded_ok, excluded_detail, (excluded or {}).get("owner", "qa"), "scope", excluded_status)
     hard_failed = any(item["status"] == "fail" for item in checks)
 
     if not hard_failed and args.visual_status == "fail":

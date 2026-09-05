@@ -2,7 +2,7 @@
 name: ljq-broll-fidelity-qa
 description: "对 B-roll 案例的范围、完整 Remotion 渲染、逐场景静帧、可替换元素、连续动线和逐帧视觉差异做保真验收，输出带证据的 validation/report.json 并归因到唯一责任阶段。用于决定通过或定向修正；不直接跨阶段改源码。"
 metadata:
-  version: "1.2.0"
+  version: "1.2.1"
 ---
 
 # B-roll 保真 QA

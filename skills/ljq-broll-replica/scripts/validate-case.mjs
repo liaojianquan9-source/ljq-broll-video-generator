@@ -325,6 +325,8 @@ export const validateCase = async (caseArgument, {complete = false} = {}) => {
   if (validation) {
     if (validation.caseId !== caseState.caseId) errors.push('validation.caseId must match case.json.caseId');
     if (validation.correctionPass !== caseState.iteration?.correctionsUsed) errors.push('validation.correctionPass must match case.json.iteration.correctionsUsed');
+    const validationCheckIds = (validation.checks ?? []).map((check) => check.id);
+    if (new Set(validationCheckIds).size !== validationCheckIds.length) errors.push('validation.checks IDs must be unique');
     for (const [index, issue] of (validation.issues ?? []).entries()) {
       if (issue.targetId && !elementIds.has(issue.targetId) && !reservedTargets.has(issue.targetId)) errors.push(`validation.issues[${index}].targetId references missing element "${issue.targetId}"`);
     }
@@ -358,6 +360,8 @@ export const validateCase = async (caseArgument, {complete = false} = {}) => {
   const qaGates = documents.qaGates;
   if (qaGates) {
     if (qaGates.caseId !== caseState.caseId) errors.push('qa-gates.caseId must match case.json.caseId');
+    const gateIds = (qaGates.checks ?? []).map((check) => check.id);
+    if (new Set(gateIds).size !== gateIds.length) errors.push('qa-gates check IDs must be unique');
     const byId = new Map((qaGates.checks ?? []).map((check) => [check.id, check]));
     const live = byId.get('live-elements');
     if (!live || live.status !== 'pass') errors.push('qa-gates live-elements check must pass');

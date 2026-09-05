@@ -21,7 +21,7 @@ for skill_name in "${skill_names[@]}"; do
     mv "$target_dir" "$backup_dir/$skill_name"
   fi
   mkdir -p "$target_dir"
-  rsync -a --exclude '.venv' --exclude 'node_modules' "$source_dir/" "$target_dir/"
+  rsync -a --exclude '.venv' --exclude 'node_modules' --exclude '__pycache__' --exclude '*.pyc' "$source_dir/" "$target_dir/"
 done
 
 "$skills_dir/ljq-broll-replica/scripts/setup-environment.sh"

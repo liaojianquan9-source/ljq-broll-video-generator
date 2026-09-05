@@ -4,6 +4,7 @@ set -euo pipefail
 script_dir="$(cd "$(dirname "$0")" && pwd)"
 project_dir="$(cd "$script_dir/../.." && pwd)"
 master="${LJQ_MASTER_SKILL_DIR:-$project_dir/skills/ljq-broll-replica}"
+layout_skill="${LJQ_LAYOUT_SKILL_DIR:-$project_dir/skills/ljq-broll-layout-structure}"
 qa="${LJQ_QA_SKILL_DIR:-$project_dir/skills/ljq-broll-fidelity-qa}"
 smoke_dir="$(mktemp -d /tmp/ljq-broll-e2e.XXXXXX)"
 source_file="$smoke_dir/source.mp4"
@@ -56,9 +57,9 @@ fs.writeFileSync(statePath, JSON.stringify(state, null, 2) + '\n');
 JS
 
 node "$master/scripts/initialize-case-remotion.mjs" "$case_dir"
-"$project_dir/skills/ljq-broll-layout-structure/scripts/render-layout-scene.sh" "$case_dir" scene-01 --pass --observation "Synthetic source and settled render match."
+"$layout_skill/scripts/render-layout-scene.sh" "$case_dir" scene-01 --pass --observation "Synthetic source and settled render match."
 node -e 'require("fs").writeFileSync(process.argv[1], JSON.stringify({theme:{"background-plate":"linear-gradient(90deg, #334455, #556677)"}}) + "\n")' "$case_dir/replacement-props.json"
-"$project_dir/skills/ljq-broll-layout-structure/scripts/render-replacement-still.sh" "$case_dir" background-plate "$case_dir/replacement-props.json" --pass --observation "Replacement theme renders without retaining the default flat fill."
+"$layout_skill/scripts/render-replacement-still.sh" "$case_dir" background-plate "$case_dir/replacement-props.json" --pass --observation "Replacement theme renders without retaining the default flat fill."
 node "$master/scripts/analyze-motion-continuity.mjs" "$case_dir"
 node - "$case_dir/case.json" <<'JS'
 const fs = require('fs');

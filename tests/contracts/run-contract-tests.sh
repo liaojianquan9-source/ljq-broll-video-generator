@@ -58,10 +58,11 @@ const gates = {schemaVersion: '1.2', caseId: 'v12-card', checks: [{id: 'live-ele
 for (const [file, value] of [['case.json', caseState], ['specs/layout.json', layout], ['specs/motion.json', motion], ['validation/gates.json', gates]]) fs.writeFileSync(path.join(dir, file), JSON.stringify(value, null, 2));
 JS
 node "$validator" "$v12_dir"
-node - "$v12_dir/specs/layout.json" "$v12_dir/specs/motion.json" <<'JS'
+node - "$v12_dir/specs/layout.json" "$v12_dir/specs/motion.json" "$v12_dir/validation/gates.json" <<'JS'
 const fs = require('fs');
 const layoutPath = process.argv[2];
 const motionPath = process.argv[3];
+const gatesPath = process.argv[4];
 const layout = require(layoutPath);
 layout.replacementTests = [];
 fs.writeFileSync(layoutPath, JSON.stringify(layout));
@@ -69,6 +70,9 @@ const motion = require(motionPath);
 motion.motions[0].transform.x = [{frame: 0, value: 100}, {frame: 15, value: 40}, {frame: 30, value: 0}];
 motion.continuity.status = 'failed';
 fs.writeFileSync(motionPath, JSON.stringify(motion));
+const gates = require(gatesPath);
+gates.checks.push({...gates.checks[0], observation: 'duplicate'});
+fs.writeFileSync(gatesPath, JSON.stringify(gates));
 JS
 v12_invalid="$(mktemp /tmp/ljq-broll-v12-invalid.XXXXXX)"
 if node "$validator" "$v12_dir" >"$v12_invalid" 2>&1; then
@@ -78,5 +82,6 @@ fi
 grep -q 'requires a passed replacement test' "$v12_invalid"
 grep -q 'must use a curve track in schema 1.2' "$v12_invalid"
 grep -q 'motion.continuity.status must be "passed"' "$v12_invalid"
+grep -q 'qa-gates check IDs must be unique' "$v12_invalid"
 rm -f "$v12_invalid"
 echo "Contract tests passed"

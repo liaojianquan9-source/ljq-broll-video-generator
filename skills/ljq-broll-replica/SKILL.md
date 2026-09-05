@@ -2,7 +2,7 @@
 name: ljq-broll-replica
 description: "把用户指定的连续 B-roll 参考片复刻成可编辑、可替换的 Remotion 案例，并完成范围预检、逐场景静帧、逐元素动效、完整渲染和有限 QA 修正。用于直接临摹或高保真复刻；不负责从口播自动选点或推荐模板。"
 metadata:
-  version: "1.3.0"
+  version: "1.3.1"
 ---
 
 # B-roll 高保真复刻总控
